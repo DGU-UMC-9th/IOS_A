@@ -10,6 +10,7 @@ import SwiftUI
 struct UserManageView: View {
     @AppStorage("userId") var userId: String = ""
     @AppStorage("userName") var userName: String = ""
+    @State private var newName: String = ""
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -25,11 +26,11 @@ struct UserManageView: View {
                 .frame(height: 24)
             
             HStack {
-                TextField("\(userName)", text: $userName)
+                TextField("\(userName)", text: $newName)
                     .font(.medium18)
                 Spacer()
                 Button {
-                    userName = userName
+                    userName = newName
                 } label: {
                     Text("변경")
                         .font(.medium10)
