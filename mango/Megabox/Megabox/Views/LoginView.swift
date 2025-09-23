@@ -7,93 +7,100 @@
 
 import SwiftUI
 
-struct LoginView: View{
-    @State private var id: String=""
-    @State private var pw: String=""
+struct LoginView: View {
+    @State private var id: String = ""
+    @State private var pw: String = ""
     
-    var body: some View{
-        loginGroup
+    var body: some View {
+        VStack {
+            LoginHeader()
+            Spacer()
+            LoginInput(id: $id, pw: $pw)
+            Spacer()
+            LoginButton()
+            Spacer()
+            SocialLogin()
+            PromoImage()
+            Spacer()
+        }
+        .padding(.horizontal, 16.5)
     }
+}
+
+private struct LoginHeader: View {
+    var body: some View {
+        Text("로그인")
+            .font(.pretend(type: .semibold, size: 24))
+            .foregroundStyle(.black)
+            .frame(maxWidth: .infinity, alignment: .center)
+            .padding(.vertical, 20)
+    }
+}
+
+private struct LoginInput: View {
+    @Binding var id: String
+    @Binding var pw: String
     
-    private var loginGroup: some View{
-        // 전체 컨텐츠
-        VStack{
-            // 상단 컨텐츠
-            VStack{
-                // 로그인 상단 네비게이션
-                HStack{
-                    Text("로그인")
-                        .font(.pretend(type: .semibold, size: 24))
-                        .multilineTextAlignment(.center)
-                        .foregroundStyle(.black)
-                    .frame(maxWidth: .infinity, alignment: .top)}
-                
-                Spacer()
-                
-                // 로그인 영역
-                VStack{
-                    // 로그인 영역 - 아이디, 비밀번호
-                    VStack(spacing: 40){
-                        // 텍스트 필드
-                        VStack(spacing: 4){
-                            TextField("아이디", text: $id)
-                                .font(.pretend(type: .medium, size: 16))
-                                .foregroundStyle(Color.gray03)
-                            Divider()
-                                .frame(height: 1)
-                                .background(Color.gray02)}
-                        // 텍스트 필드
-                        VStack(spacing: 4){
-                            TextField("비밀번호", text: $pw)
-                                .font(.pretend(type: .medium, size: 16))
-                                .foregroundStyle(Color.gray03)
-                            Divider()
-                                .frame(height: 1)
-                                .background(Color.gray02)
-                        }
-                    }.frame(height: 86)
-                    
-                    Spacer().frame(height: 90)
-                    
-                    // 로그인 영역 - 버튼
-                    VStack(spacing: 17){
-                        Button(action: {}){
-                            Text("로그인")
-                                .font(.pretend(type: .bold, size: 18))
-                                .frame(maxWidth: .infinity, minHeight: 54, alignment: .center)
-                                .foregroundStyle(Color.white)
-                                .background(Color.purple03)
-                                .cornerRadius(12)
-                        }
-                        Text("회원가입")
-                            .font(.pretend(type: .medium, size: 13))
-                            .foregroundStyle(Color.gray03)
-                    }.frame(height: 40)}.frame(height: 323)
-                
-                Spacer()
-                
-                // 소셜 로그인
-                HStack(alignment: .top){
-                    Image("naver")
-                    Spacer()
-                    Image("kakao")
-                    Spacer()
-                    Image("apple")
-                }.frame(width: 266, height: 40, alignment: .top)
+    var body: some View {
+        VStack(spacing: 40) {
+            VStack(spacing: 4) {
+                TextField("아이디", text: $id)
+                    .font(.pretend(type: .medium, size: 16))
+                    .foregroundStyle(Color.gray03)
+                Divider()
+                    .frame(height: 1)
+                    .background(Color.gray02)
             }
-            .frame(height: 516)
-            .padding(.horizontal, 0.5)
-            
+            VStack(spacing: 4) {
+                TextField("비밀번호", text: $pw)
+                    .font(.pretend(type: .medium, size: 16))
+                    .foregroundStyle(Color.gray03)
+                Divider()
+                    .frame(height: 1)
+                    .background(Color.gray02)
+            }
+        }
+        .frame(height: 86)
+    }
+}
+
+private struct LoginButton: View {
+    var body: some View {
+        VStack(spacing: 17) {
+            Button(action: {}) {
+                Text("로그인")
+                    .font(.pretend(type: .bold, size: 18))
+                    .frame(maxWidth: .infinity, minHeight: 54, alignment: .center)
+                    .foregroundStyle(Color.white)
+                    .background(Color.purple03)
+                    .cornerRadius(12)
+            }
+            Text("회원가입")
+                .font(.pretend(type: .medium, size: 13))
+                .foregroundStyle(Color.gray03)
+        }
+        .frame(height: 40)
+    }
+}
+
+private struct SocialLogin: View {
+    var body: some View {
+        HStack(alignment: .top) {
+            Image("naver")
             Spacer()
-            
-            // 홍보 이미지(umc로고)
-            Image("umc")
-                .resizable()
-                .frame(height: 266)
-            
+            Image("kakao")
             Spacer()
-            
-        }.padding(.horizontal, 16.5)
+            Image("apple")
+        }
+        .frame(width: 266, height: 40, alignment: .top)
+    }
+}
+
+private struct PromoImage: View {
+    var body: some View {
+        Image("umc")
+            .resizable()
+            .frame(height: 266)
     }
 }
 
