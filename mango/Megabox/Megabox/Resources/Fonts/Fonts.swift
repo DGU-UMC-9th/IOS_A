@@ -1,10 +1,17 @@
 //
+<<<<<<< HEAD
 //  Font.swift
 //  Megabox
 //
 //  Created by 송민교 on 9/19/25.
 //
 
+=======
+//  Fonts.swift
+//  Week1_Practice
+//
+//  Created by 송민교 on 9/17/25.
+//
 import Foundation
 import SwiftUI
 
@@ -35,10 +42,10 @@ extension Font {
         }
     }
     
-    // .font(.pretend(.semibold, size: 30))
     static func pretend(type: Pretend, size: CGFloat) -> Font {
         return .custom(type.value, size: size)
     }
-    
 }
+
+
 

@@ -29,9 +29,22 @@
 		DBA0DC272E7D28020001FF88 /* MegaboxUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MegaboxUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		DBA0E0CB2E8972380001FF88 /* Exceptions for "Megabox" folder in "Megabox" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = DBA0DC0F2E7D28000001FF88 /* Megabox */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		DBA0DC122E7D28000001FF88 /* Megabox */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				DBA0E0CB2E8972380001FF88 /* Exceptions for "Megabox" folder in "Megabox" target */,
+			);
 			path = Megabox;
 			sourceTree = "<group>";
 		};
