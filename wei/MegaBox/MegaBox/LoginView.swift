@@ -1,15 +1,27 @@
 import SwiftUI
 import Foundation
+import Observation
 
 
 struct LoginView: View {
+    
+    private var viewModel: LoginViewModel = .init()
+    
+    @AppStorage("id") private var id: String = ""
+    @AppStorage("password") private var password: String = ""
+    @AppStorage("name") private var name: String = ""
+    
+    @State private var idInput: String = ""
+    @State private var passwordInput: String = ""
+    
+    
     var body: some View {
         VStack(spacing: 36) {
             loginSection
             ButtonSection
             socialLoginSection
                 .padding(.top, 20)
-            //Spacer()
+            
             bannerSection
         }.padding(.bottom, 40)
         .toolbar {
@@ -27,19 +39,20 @@ struct LoginView: View {
     private var loginSection: some View {
         VStack(spacing: 40) {
             VStack(alignment: .leading, spacing: 8) {
-                Text("아이디")
+                TextField("아이디", text: $idInput)
                     .font(.medium16)
                     .foregroundColor(.gray03)
-                    //.frame(maxWidth: .infinity, alignment: .leading)
+                    .autocapitalization(.none)
+                    
                 Divider()
                     .foregroundColor(.gray02)
             }
             
             VStack(alignment: .leading, spacing: 8) {
-                Text("비밀번호")
+                SecureField("비밀번호", text: $passwordInput)
                     .font(.medium16)
                     .foregroundColor(.gray03)
-                    //.frame(maxWidth: .infinity, alignment: .leading)
+                    
                 Divider()
                     .foregroundColor(.gray02)
             }
@@ -49,7 +62,9 @@ struct LoginView: View {
     private var ButtonSection: some View {
         VStack(spacing: 17) {
             Button {
-                // 로그인 액션
+                
+                self.id = idInput
+                self.password = passwordInput
             } label: {
                 RoundedRectangle(cornerRadius: 10)
                     .fill(.purple03)
@@ -62,7 +77,7 @@ struct LoginView: View {
             }
             
             Button {
-                // 회원가입 액션
+                
             } label: {
                 Text("회원가입")
                     .font(.medium13)
@@ -94,16 +109,38 @@ struct LoginView: View {
         Image(.umc1)
             .resizable()
             .aspectRatio(contentMode: .fill)
-            //.frame(maxWidth: .infinity)
-            //.frame(height: 266)
     }
 }
+
+
+
+
+enum PREVIEW_DEVICE_TYPE : String, CaseIterable {
+    case iPhone_16_Pro = "iPhone 16 Pro"
+    case iPhone_11 = "iPhone 11"
+    
+    var previewDevice: PreviewDevice {
+        .init(rawValue: self.rawValue)
+    }
+}
+
+func devicePreviews<Content: View>(
+    content: @escaping () -> Content
+) -> some View {
+    ForEach(PREVIEW_DEVICE_TYPE.allCases, id: \.self) { device in
+        content()
+            .previewDevice(device.previewDevice)
+            .previewDisplayName(device.rawValue)
+    }
+}
+
 
 struct LoginView_Preview: PreviewProvider {
     static var previews: some View {
-        NavigationStack {
-            LoginView()
+        devicePreviews {
+            NavigationStack {
+                LoginView()
+            }
         }
     }
 }
-
