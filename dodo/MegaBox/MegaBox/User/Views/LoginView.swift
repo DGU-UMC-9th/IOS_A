@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct LoginView: View {
-    @State var id: String = ""
-    @State var password: String = ""
+    @AppStorage("userId") private var userId: String = ""
+    @AppStorage("password") private var password: String = ""
+    
+    @State var vm = LoginViewModel()
     
     var body: some View {
         VStack(spacing: 36) {
@@ -27,25 +29,26 @@ struct LoginView: View {
         .padding(.horizontal, 16)
     }
     
-    var textSection: some View {
+    private var textSection: some View {
         VStack(spacing: 40) {
             VStack {
-                TextField("아이디", text: $id)
+                TextField("아이디", text: $vm.userId)
                     .font(.medium16)
                 Divider()
             }
             VStack {
-                SecureField("비밀번호", text: $password)
+                SecureField("비밀번호", text: $vm.password)
                     .font(.medium16)
                 Divider()
             }
         }
     }
     
-    var loginSection: some View {
+    private var loginSection: some View {
         VStack(spacing: 17) {
             Button {
-                
+                userId = vm.userId
+                password = vm.password
             } label: {
                 RoundedRectangle(cornerRadius: 12)
                     .fill(.purple03)
@@ -67,7 +70,7 @@ struct LoginView: View {
         }
     }
     
-    var socialLoginSection: some View {
+    private var socialLoginSection: some View {
         HStack(spacing: 52) {
             Button {
                 
@@ -89,7 +92,7 @@ struct LoginView: View {
         }
     }
     
-    var bannerSection: some View {
+    private var bannerSection: some View {
         Image(.UMC)
             .resizable()
             .aspectRatio(contentMode: .fit)
