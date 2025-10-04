@@ -30,7 +30,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		DBA0DC832E7EA4110001FF88 /* Exceptions for "Megabox" folder in "Megabox" target */ = {
+		DBA0E0CB2E8972380001FF88 /* Exceptions for "Megabox" folder in "Megabox" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -43,19 +43,9 @@
 		DBA0DC122E7D28000001FF88 /* Megabox */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				DBA0DC832E7EA4110001FF88 /* Exceptions for "Megabox" folder in "Megabox" target */,
+				DBA0E0CB2E8972380001FF88 /* Exceptions for "Megabox" folder in "Megabox" target */,
 			);
 			path = Megabox;
-			sourceTree = "<group>";
-		};
-		DBA0DC202E7D28020001FF88 /* MegaboxTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = MegaboxTests;
-			sourceTree = "<group>";
-		};
-		DBA0DC2A2E7D28020001FF88 /* MegaboxUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = MegaboxUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -89,8 +79,6 @@
 			isa = PBXGroup;
 			children = (
 				DBA0DC122E7D28000001FF88 /* Megabox */,
-				DBA0DC202E7D28020001FF88 /* MegaboxTests */,
-				DBA0DC2A2E7D28020001FF88 /* MegaboxUITests */,
 				DBA0DC112E7D28000001FF88 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -143,9 +131,6 @@
 			dependencies = (
 				DBA0DC1F2E7D28020001FF88 /* PBXTargetDependency */,
 			);
-			fileSystemSynchronizedGroups = (
-				DBA0DC202E7D28020001FF88 /* MegaboxTests */,
-			);
 			name = MegaboxTests;
 			packageProductDependencies = (
 			);
@@ -165,9 +150,6 @@
 			);
 			dependencies = (
 				DBA0DC292E7D28020001FF88 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				DBA0DC2A2E7D28020001FF88 /* MegaboxUITests */,
 			);
 			name = MegaboxUITests;
 			packageProductDependencies = (

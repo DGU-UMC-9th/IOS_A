@@ -1,10 +1,9 @@
 //
-//  Font.swift
-//  Megabox
+//  Fonts.swift
+//  Week1_Practice
 //
-//  Created by 송민교 on 9/19/25.
+//  Created by 송민교 on 9/17/25.
 //
-
 import Foundation
 import SwiftUI
 
@@ -38,7 +37,21 @@ extension Font {
     static func pretend(type: Pretend, size: CGFloat) -> Font {
         return .custom(type.value, size: size)
     }
+    
+    static var PretendardBold30: Font {
+        return .pretend(type: .bold, size: 30)
+    }
+    
+    static var PretendarRegular16: Font{
+        return .pretend(type: .regular, size: 16)
+    }
+    
+    static var PretendarBold24: Font{
+        return .pretend(type: .bold, size: 24)
+    }
+    
+    static var PretendarSemiBold18: Font{
+        return .pretend(type: .semibold, size: 18)
+    }
+    
 }
-
-
-
