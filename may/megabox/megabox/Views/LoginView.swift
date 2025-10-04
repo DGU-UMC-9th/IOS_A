@@ -9,11 +9,7 @@ import SwiftUI
 
 struct LoginView: View {
     
-    @AppStorage("id") private var id: String = ""
-    @AppStorage("password") private var password: String = ""
-    
     @State var model = LoginViewModel()
-    
     
     var body: some View {
         VStack{
@@ -29,9 +25,16 @@ struct LoginView: View {
             Spacer()
                 .frame(height: 23)
             imgSection
+            Spacer()
+                .frame(height: 50)
         }
-        Spacer()
-            .frame(height: 50)
+        .ignoresSafeArea(.keyboard)
+        .alert("로그인 실패", isPresented: $model.showAlert) {
+                    Button("확인", role: .cancel) { }
+                } message: {
+                    Text(model.alertMessage)
+                }
+        
     }
     
     //헤더
@@ -47,6 +50,7 @@ struct LoginView: View {
         VStack(alignment: .leading){
             TextField("아이디", text: $model.id)
                 .font(.medium16)
+                .textInputAutocapitalization(.never)
                 .foregroundColor(.gray03)
             Divider()
             
@@ -55,6 +59,7 @@ struct LoginView: View {
             
             SecureField("비밀번호", text: $model.password)
                 .font(.medium16)
+                .textInputAutocapitalization(.never)
                 .foregroundColor(.gray03)
             Divider()
         }
@@ -67,11 +72,10 @@ struct LoginView: View {
     private var loginSection: some View {
         
         VStack(alignment: .center, spacing: 17){
-            Button(action: {
-                id = model.id
-                password = model.password
-                print("\(id), \(password)")
-            }, label: {
+            Button{
+                print("클릭됨")
+                model.login()
+            } label: {
                 ZStack {
                     RoundedRectangle(cornerRadius: 20)
                         .foregroundColor(.purple03)
@@ -79,7 +83,8 @@ struct LoginView: View {
                         .font(.bold18)
                         .foregroundStyle(.white)
                 }
-            }).frame(height:54)
+            }
+            .frame(height:54)
             
             VStack(alignment: .center){
                 Text("회원가입")
@@ -131,5 +136,7 @@ struct LoginView: View {
 }
 
 #Preview {
-    LoginView()
+    NavigationStack {
+        LoginView(model: LoginViewModel())
+    }
 }

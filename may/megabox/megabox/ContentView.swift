@@ -2,20 +2,25 @@
 //  ContentView.swift
 //  megabox
 //
-//  Created by 백지은 on 9/27/25.
+//  Created by 백지은 on 10/4/25.
 //
 
 import SwiftUI
 
 struct ContentView: View {
+    @State private var model = LoginViewModel()
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationStack {
+            if model.isLogined {
+                TabSectionView()
+                    .transition(.opacity)
+            } else {
+                LoginView(model: model)
+                    .transition(.opacity)
+            }
         }
-        .padding()
+        .animation(.easeInOut(duration: 0.3), value: model.isLogined)
     }
 }
 

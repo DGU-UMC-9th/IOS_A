@@ -52,6 +52,7 @@ extension Font {
     static var semiBold12: Font { return .pretend(type: .semibold, size: 12) }
     static var regular20: Font { return .pretend(type: .regular, size: 20) }
     static var regular18: Font { return .pretend(type: .regular, size: 18) }
+    static var regular15: Font { return .pretend(type: .regular, size: 15) }
     static var regular13: Font { return .pretend(type: .regular, size: 13) }
     static var regular12: Font { return .pretend(type: .regular, size: 12) }
     static var regular09: Font { return .pretend(type: .regular, size: 9) }
