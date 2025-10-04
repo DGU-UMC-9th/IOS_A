@@ -11,6 +11,7 @@ struct UserInfoManageView: View {
     @AppStorage("id") var id: String = ""
     @AppStorage("username") var username: String = ""
     @State private var newName: String = ""
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         VStack{
@@ -27,8 +28,8 @@ struct UserInfoManageView: View {
                 .font(.medium16)
             
             HStack {
-                NavigationLink {
-                    UserInfoView()
+                Button {
+                    dismiss()
                 } label: {
                     Image(systemName: "chevron.left.square")
                         .resizable()
