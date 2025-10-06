@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct HomeView: View {
-    @State private var selected: Category = .home
+    @State private var selected: HomeCategory = .home
     @State var model = HomeViewModel()
     
     @State private var selectedTab: MovieTab = .chart
@@ -38,7 +38,7 @@ struct HomeView: View {
         VStack(alignment: .leading) {
             Image(.meboxHeader)
             HStack(spacing: 31) {
-                ForEach(Category.allCases, id: \.self) { type in
+                ForEach(HomeCategory.allCases, id: \.self) { type in
                     Button {
                         selected = type
                     } label: {

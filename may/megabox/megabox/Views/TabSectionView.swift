@@ -9,27 +9,19 @@ import SwiftUI
 
 struct TabSectionView: View {
     var body: some View {
-        TabView{
-            HomeView()
-                .tabItem {
-                    Image(systemName: "house.fill")
-                    Text("홈")
-                }
-            HomeView()
-                .tabItem {
-                    Image(systemName: "ticket")
-                    Text("바로 예매")
-                }
-            HomeView()
-                .tabItem {
-                    Image(systemName: "popcorn")
-                    Text("모바일 오더")
-                }
-            UserInfoView()
-                .tabItem {
-                    Image(systemName: "person")
-                    Text("마이페이지")
-                }
+        TabView {
+            Tab("홈", systemImage: "house.fill") {
+                HomeView()
+            }
+            Tab("바로 예매", systemImage: "ticket") {
+                HomeView()
+            }
+            Tab("모바일 오더", systemImage: "popcorn") {
+                HomeView()
+            }
+            Tab("마이페이지", systemImage: "person") {
+                UserInfoView()
+            }
         }
     }
 }
