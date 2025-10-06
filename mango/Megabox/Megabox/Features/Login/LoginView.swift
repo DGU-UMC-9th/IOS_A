@@ -10,20 +10,28 @@ import Observation // @Observable, @Bindable 사용하기 위해
 
 struct LoginView: View {
     @State private var viewModel = LoginViewModel()
+    @AppStorage("id") var id: String = ""
+    @AppStorage("pw") var pw: String = ""
+    @AppStorage("userName") var userName = ""
     
     var body: some View {
-        VStack {
-            LoginHeader
-            Spacer()
-            LoginInput(viewModel: viewModel)
-            Spacer()
-            LoginButton(viewModel: viewModel)
-            Spacer()
-            SocialLogin
-            PromoImage
-            Spacer()
+        NavigationStack{
+            VStack {
+                LoginHeader
+                Spacer()
+                LoginInput(viewModel: viewModel)
+                Spacer()
+                LoginButton(viewModel: viewModel)
+                Spacer()
+                SocialLogin
+                PromoImage
+                Spacer()
+            }
+            .padding(.horizontal, 16.5)
+            .navigationDestination(isPresented: $viewModel.isLoginSuccess){
+                RootView()
+            }
         }
-        .padding(.horizontal, 16.5)
     }
     
     private var LoginHeader: some View {
@@ -60,15 +68,14 @@ struct LoginView: View {
     }
     
     private func LoginButton(@Bindable viewModel: LoginViewModel)-> some View {
-        @AppStorage("id") var id: String = ""
-        @AppStorage("pw") var pw: String = ""
-        @AppStorage("userName") var userName = ""
         
         return VStack(spacing: 17) {
             Button(action: {
                 id = viewModel.loginModel.id
                 pw = viewModel.loginModel.pw
                 userName = "송민교"
+                
+                viewModel.loginConfirm(storedID: id, storedPW: pw)
             }) {
                 Text("로그인")
                     .font(.pretend(type: .bold, size: 18))
