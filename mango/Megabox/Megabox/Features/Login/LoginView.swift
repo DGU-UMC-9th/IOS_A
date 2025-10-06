@@ -15,22 +15,21 @@ struct LoginView: View {
     @AppStorage("userName") var userName = ""
     
     var body: some View {
-        NavigationStack{
-            VStack {
-                LoginHeader
-                Spacer()
-                LoginInput(viewModel: viewModel)
-                Spacer()
-                LoginButton(viewModel: viewModel)
-                Spacer()
-                SocialLogin
-                PromoImage
-                Spacer()
-            }
-            .padding(.horizontal, 16.5)
-            .navigationDestination(isPresented: $viewModel.isLoginSuccess){
-                RootView()
-            }
+        VStack {
+            LoginHeader
+            Spacer()
+            LoginInput(viewModel: viewModel)
+            Spacer()
+            LoginButton(viewModel: viewModel)
+            Spacer()
+            SocialLogin
+            PromoImage
+            Spacer()
+        }
+        .padding(.horizontal, 16.5)
+        // navigation은 RootView에서 모두 관리하기 위해 navigationStack대신 사용
+        .fullScreenCover(isPresented: $viewModel.isLoginSuccess){
+            RootView()
         }
     }
     
