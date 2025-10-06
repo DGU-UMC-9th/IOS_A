@@ -22,10 +22,3 @@ struct MovieModel: Identifiable, Hashable{
     let rating: String
     let releaseDate: String
 }
-
-struct MovieFeedItemModel: Identifiable, Hashable{
-    var id = UUID()
-    var thumbnailName: String
-    var title: String
-    var subtitle: String
-}
