@@ -24,6 +24,9 @@ struct InfoView: View {
         }
         .padding(.horizontal, 20)
         .padding(.bottom, 400 )
+        .navigationDestination(for: String.self)  { value in
+            InfoManageView()
+        }
     }
     
     private var Member : some View {
@@ -34,6 +37,7 @@ struct InfoView: View {
             
             Button(
                 action:{
+                    path.append("detail")
                     //NavigationLink(destination:InfoManageView())
                 }, label:{
                     RoundedRectangle(cornerRadius: 12)

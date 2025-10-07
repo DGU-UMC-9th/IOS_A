@@ -20,10 +20,11 @@ struct InfoManageView: View {
     
     var body: some View {
         VStack(spacing:56){
-            Navbar
+            //Navbar
             ContentView
         }
         .padding(.bottom, 500)
+        .navigationTitle("회원정보 관리")
         
         
     }
