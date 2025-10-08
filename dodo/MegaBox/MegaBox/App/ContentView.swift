@@ -8,14 +8,19 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var viewModel = LoginViewModel()
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationStack {
+            if viewModel.isAuthenticated {
+                MegaBoxTabView()
+                    .transition(.opacity)
+            } else {
+                LoginView(vm: viewModel)
+                    .transition(.opacity)
+            }
         }
-        .padding()
+        .animation(.easeInOut(duration: 0.3), value: viewModel.isAuthenticated)
     }
 }
 

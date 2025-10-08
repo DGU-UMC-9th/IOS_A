@@ -5,8 +5,6 @@
 //  Created by 김도연 on 9/19/25.
 //
 
-import Foundation
-
 enum BookingType: String, CaseIterable {
     case movieReservation = "영화별예매"
     case theaterReservation = "극장별예매"

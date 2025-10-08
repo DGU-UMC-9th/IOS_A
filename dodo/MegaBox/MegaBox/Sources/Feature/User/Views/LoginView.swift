@@ -8,10 +8,7 @@
 import SwiftUI
 
 struct LoginView: View {
-    @AppStorage("userId") private var userId: String = ""
-    @AppStorage("password") private var password: String = ""
-    
-    @State var vm = LoginViewModel()
+    @State var vm: LoginViewModel
     
     var body: some View {
         VStack(spacing: 36) {
@@ -27,17 +24,25 @@ struct LoginView: View {
             }
         }
         .padding(.horizontal, 16)
+        .alert("로그인 실패", isPresented: $vm.showAlert) {
+            Button("확인", role: .cancel) { }
+        } message: {
+            Text(vm.alertMessage)
+        }
     }
+    
     
     private var textSection: some View {
         VStack(spacing: 40) {
             VStack {
                 TextField("아이디", text: $vm.userId)
+                    .textInputAutocapitalization(.never)
                     .font(.medium16)
                 Divider()
             }
             VStack {
                 SecureField("비밀번호", text: $vm.password)
+                    .textInputAutocapitalization(.never)
                     .font(.medium16)
                 Divider()
             }
@@ -47,8 +52,7 @@ struct LoginView: View {
     private var loginSection: some View {
         VStack(spacing: 17) {
             Button {
-                userId = vm.userId
-                password = vm.password
+                vm.login()
             } label: {
                 RoundedRectangle(cornerRadius: 12)
                     .fill(.purple03)
@@ -60,8 +64,8 @@ struct LoginView: View {
                     )
             }
             
-            Button {
-                
+            NavigationLink {
+                SignUpView()
             } label: {
                 Text("회원가입")
                     .font(.medium13)
@@ -102,6 +106,6 @@ struct LoginView: View {
 
 #Preview {
     NavigationStack {
-        LoginView()
+        LoginView(vm: LoginViewModel())
     }
 }
