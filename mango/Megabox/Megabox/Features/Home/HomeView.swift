@@ -17,6 +17,7 @@ struct RootView: View {
     var body: some View {
         TabView {
             //홈 탭
+            
             HomeView(viewModel: viewModel, router: $homeRouter)
                 .tabItem { Label("홈", systemImage: "house") }
 
