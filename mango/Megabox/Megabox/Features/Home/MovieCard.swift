@@ -9,9 +9,11 @@ import SwiftUI
 
 struct MovieCard: View {
     let movie: MovieModel
-    @Binding var router: NavigationRouterViewModel
+    @Environment(NavigationRouterViewModel.self) private var router
     
     var body: some View {
+        @Bindable var router = router
+        
         VStack(alignment: .leading) {
             Image(movie.movieImageName)
                 .onTapGesture {

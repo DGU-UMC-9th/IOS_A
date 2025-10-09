@@ -10,11 +10,13 @@ import SwiftUI
 struct DetailMovieView: View{
     // 상위뷰로부터
     let movie: MovieModel
-    @Binding var router: NavigationRouterViewModel
+    @Environment(NavigationRouterViewModel.self) private var router
     
     @State var bottomButton = "detailInfo"
     
     var body: some View{
+        @Bindable var router = router
+        
         ScrollView(showsIndicators: false){
             VStack{
                 Image(movie.topPosterImageName)

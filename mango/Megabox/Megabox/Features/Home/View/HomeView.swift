@@ -7,39 +7,10 @@
 
 import SwiftUI
 
-struct RootView: View {
-    @State private var homeRouter = NavigationRouterViewModel()
-    @State private var reservationRouter = NavigationRouterViewModel()
-    @State private var mobileOrderRouter = NavigationRouterViewModel()
-    @State private var profileRouter = NavigationRouterViewModel()
-    @State private var viewModel = MovieViewModel()
-
-    var body: some View {
-        TabView {
-            //홈 탭
-            
-            HomeView(viewModel: viewModel, router: $homeRouter)
-                .tabItem { Label("홈", systemImage: "house") }
-
-            // 바로 예매 탭
-            ReservationView()
-                .tabItem { Label("바로예매", systemImage: "ticket") }
-
-            // 모바일오더 탭
-            MobileOrderView()
-                .tabItem { Label("모바일오더", systemImage: "popcorn") }
-
-            // 마이페이지 탭
-            ProfileView()
-                .tabItem { Label("마이페이지", systemImage: "person") }
-        }
-    }
-}
-
 struct HomeView: View {
     let viewModel: MovieViewModel
-    @Binding var router: NavigationRouterViewModel
-    
+
+    @Environment(NavigationRouterViewModel.self) private var router
     @State private var selectedTab = "홈"
     @State private var selectedButton = "movieChart"
     
@@ -47,22 +18,14 @@ struct HomeView: View {
     private let item = MovieFeedItemViewModel()
     
     var body: some View {
-        NavigationStack(path: $router.path) {
-            ScrollView(showsIndicators: true) {
-                VStack(alignment: .leading) {
-                    headerSection
-                    movieCardSection
-                    movieFeedSection
-                }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 20)
+        ScrollView(showsIndicators: true) {
+            VStack(alignment: .leading) {
+                headerSection
+                movieCardSection
+                movieFeedSection
             }
-            .navigationDestination(for: Route.self) { route in
-                switch route {
-                case .detail(let movie):
-                    DetailMovieView(movie: movie, router: $router)
-                }
-            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 20)
         }
     }
     var headerSection: some View {
@@ -123,7 +86,7 @@ struct HomeView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(spacing: 24) {
                     ForEach(currentMovieList) { movie in
-                        MovieCard(movie: movie, router: $router)
+                        MovieCard(movie: movie)
                     }
                 }
             }
@@ -176,5 +139,6 @@ struct HomeView: View {
 }
 
 #Preview {
-    RootView()
+    HomeView(viewModel: MovieViewModel())
+        .environment(NavigationRouterViewModel())
 }

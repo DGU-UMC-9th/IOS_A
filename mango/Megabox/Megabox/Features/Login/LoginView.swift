@@ -9,7 +9,7 @@ import SwiftUI
 import Observation // @Observable, @Bindable 사용하기 위해
 
 struct LoginView: View {
-    @State private var viewModel = LoginViewModel()
+    @Binding var viewModel: LoginViewModel
     @AppStorage("id") var id: String = ""
     @AppStorage("pw") var pw: String = ""
     @AppStorage("userName") var userName = ""
@@ -27,10 +27,6 @@ struct LoginView: View {
             Spacer()
         }
         .padding(.horizontal, 16.5)
-        // navigation은 RootView에서 모두 관리하기 위해 navigationStack대신 사용
-        .fullScreenCover(isPresented: $viewModel.isLoginSuccess){
-            RootView()
-        }
     }
     
     private var LoginHeader: some View {
@@ -109,6 +105,7 @@ struct LoginView: View {
 }
 
 #Preview{
-    LoginView()
+    @Previewable @State var dummyViewModel = LoginViewModel()
+    LoginView(viewModel: $dummyViewModel)
 }
 
