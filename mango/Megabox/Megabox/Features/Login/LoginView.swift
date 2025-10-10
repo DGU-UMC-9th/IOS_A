@@ -9,7 +9,10 @@ import SwiftUI
 import Observation // @Observable, @Bindable 사용하기 위해
 
 struct LoginView: View {
-    @State private var viewModel = LoginViewModel()
+    @Binding var viewModel: LoginViewModel
+    @AppStorage("id") var id: String = ""
+    @AppStorage("pw") var pw: String = ""
+    @AppStorage("userName") var userName = ""
     
     var body: some View {
         VStack {
@@ -60,15 +63,14 @@ struct LoginView: View {
     }
     
     private func LoginButton(@Bindable viewModel: LoginViewModel)-> some View {
-        @AppStorage("id") var id: String = ""
-        @AppStorage("pw") var pw: String = ""
-        @AppStorage("userName") var userName = ""
         
         return VStack(spacing: 17) {
             Button(action: {
                 id = viewModel.loginModel.id
                 pw = viewModel.loginModel.pw
                 userName = "송민교"
+                
+                viewModel.loginConfirm(storedID: id, storedPW: pw)
             }) {
                 Text("로그인")
                     .font(.pretend(type: .bold, size: 18))
@@ -103,6 +105,7 @@ struct LoginView: View {
 }
 
 #Preview{
-    LoginView()
+    @Previewable @State var dummyViewModel = LoginViewModel()
+    LoginView(viewModel: $dummyViewModel)
 }
 

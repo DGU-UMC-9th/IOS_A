@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct MegaboxApp: App {
+    @State private var router = NavigationRouterViewModel()
     var body: some Scene {
         WindowGroup {
-            ProfileView()
+            ContentView()
+                .environment(router)
         }
     }
 }
