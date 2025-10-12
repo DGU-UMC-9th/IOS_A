@@ -16,7 +16,7 @@ struct MovieInfoView: View {
     
     private var movieInfo: MovieInfo? {
         viewModel.movieInfo.first(where: { $0.name == movie.name })
-    }//없으면 nil
+    }
     
     var body: some View {
         ScrollView {
