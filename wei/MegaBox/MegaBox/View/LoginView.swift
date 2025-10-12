@@ -13,27 +13,41 @@ struct LoginView: View {
     
     @State private var idInput: String = ""
     @State private var passwordInput: String = ""
+    @State private var isLoggedIn: Bool = false
     
     
     var body: some View {
-        VStack(spacing: 36) {
-            loginSection
-            ButtonSection
-            socialLoginSection
-                .padding(.top, 20)
-            
-            bannerSection
-        }.padding(.bottom, 40)
-        .toolbar {
-            ToolbarItem(placement: .principal) {
-                Text("로그인")
-                    .font(.semiBold24)
-                    .foregroundColor(.black)
+        if isLoggedIn {
+                    MainTabView()
+                }
+        else{
+            NavigationStack{
+            VStack(spacing: 36) {
+                loginSection
+                ButtonSection
+                socialLoginSection
+                    .padding(.top, 20)
+                
+                bannerSection
             }
-        }
-        .padding(.horizontal, 20)
-        .padding(.top, 80)
-        .background(.white)
+            .padding(.bottom, 40)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("로그인")
+                        .font(.semiBold24)
+                        .foregroundColor(.black)
+                }
+            }
+            .padding(.horizontal, 20)
+            .padding(.top, 80)
+            .background(.white)
+//            .navigationDestination(isPresented: $isLoggedIn) {
+//                        MainTabView()
+//                            .navigationBarBackButtonHidden(true)
+//                    }
+        }}
+        
+       
     }
     
     private var loginSection: some View {
@@ -62,20 +76,20 @@ struct LoginView: View {
     private var ButtonSection: some View {
         VStack(spacing: 17) {
             Button {
-                
-                self.id = idInput
-                self.password = passwordInput
-            } label: {
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(.purple03)
-                    .frame(height: 54)
-                    .overlay(
-                        Text("로그인")
-                            .font(.bold18)
-                            .foregroundColor(.white)
-                    )
-            }
-            
+                    self.id = idInput
+                    self.password = passwordInput
+                    isLoggedIn = true
+                } label: {
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(.purple03)
+                        .frame(height: 54)
+                        .overlay(
+                            Text("로그인")
+                                .font(.bold18)
+                                .foregroundColor(.white)
+                        )
+                }
+    
             Button {
                 
             } label: {
@@ -135,12 +149,6 @@ func devicePreviews<Content: View>(
 }
 
 
-struct LoginView_Preview: PreviewProvider {
-    static var previews: some View {
-        devicePreviews {
-            NavigationStack {
-                LoginView()
-            }
-        }
-    }
+#Preview {
+    LoginView()
 }

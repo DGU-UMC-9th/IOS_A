@@ -14,6 +14,7 @@ struct InfoView: View {
     
     @AppStorage("id") private var userID: String = "Guest"
     @AppStorage("name") private var name: String = "이연우"
+    @Binding var path: NavigationPath
     
     var body: some View {
         VStack(spacing:33){
@@ -22,7 +23,10 @@ struct InfoView: View {
             BottomContent
         }
         .padding(.horizontal, 20)
-        .padding(.bottom, 400)
+        .padding(.bottom, 400 )
+        .navigationDestination(for: String.self)  { value in
+            InfoManageView()
+        }
     }
     
     private var Member : some View {
@@ -33,6 +37,7 @@ struct InfoView: View {
             
             Button(
                 action:{
+                    path.append("detail")
                     //NavigationLink(destination:InfoManageView())
                 }, label:{
                     RoundedRectangle(cornerRadius: 12)
@@ -253,6 +258,6 @@ struct InfoView: View {
     
 }
 
-#Preview {
-    InfoView()
-}
+//#Preview {
+//    InfoView()
+//}
