@@ -78,7 +78,7 @@ struct BookingView: View {
                 }
             }
             
-            ScrollView(.horizontal, showsIndicators: false) {
+            ScrollView(.horizontal) {
                 HStack {
                     ForEach(vm.moiveList, id: \.id) { movie in
                         Button {
@@ -104,7 +104,7 @@ struct BookingView: View {
     
     var theaterList: some View {
         VStack(alignment: .leading, spacing: 8) {
-            ScrollView(.horizontal, showsIndicators: false) {
+            ScrollView(.horizontal) {
                 HStack(spacing: 8) {
                     ForEach(Theater.allCases, id: \.self) { theater in
                         Button {
