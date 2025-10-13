@@ -15,7 +15,7 @@ struct MegaBoxTabView: View {
             }
             
             Tab("바로 예매", systemImage: "play.laptopcomputer") {
-                
+                BookingView()
             }
             
             Tab("모바일 오더", systemImage: "popcorn") {
