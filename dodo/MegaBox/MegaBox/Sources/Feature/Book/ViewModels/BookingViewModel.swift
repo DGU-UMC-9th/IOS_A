@@ -170,28 +170,6 @@ class BookingViewModel: ObservableObject {
                     ]
                 )
             ]
-        ),
-        ScreeningSchedule(
-            branch: "신촌",
-            theaters: [
-                Theaters(
-                    theaterName: "크리클라이너 3관",
-                    screenType: "2D",
-                    times: [
-                        Screening(startTime: "11:30", endTime: "13:58", availableSeats: 109, totalSeats: 116),
-                        Screening(startTime: "14:20", endTime: "16:48", availableSeats: 19, totalSeats: 116),
-                        Screening(startTime: "17:05", endTime: "19:28", availableSeats: 1, totalSeats: 116),
-                    ]
-                ),
-                Theaters(
-                    theaterName: "크리클라이너 7관",
-                    screenType: "2D",
-                    times: [
-                        Screening(startTime: "9:30", endTime: "11:50", availableSeats: 75, totalSeats: 116),
-                        Screening(startTime: "14:45", endTime: "17:04", availableSeats: 88, totalSeats: 116)
-                    ]
-                )
-            ]
         )
     ]
     
