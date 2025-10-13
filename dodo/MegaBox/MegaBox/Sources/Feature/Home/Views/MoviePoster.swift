@@ -12,10 +12,6 @@ struct MoviePoster: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            movie.posterImage
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(height: 212)
             NavigationLink {
                 //MARK: - 지금은 그냥 하드코딩 식으로 F1영화만 정보 제대로 가져올 수 있도록 제작. API연동을 한다면 movieID로 요청 보내서 MovieDetail모델에 맞춰 response받아와서 띄워주는 방식.
                 if movie.title == "F1: 더 무비" {
@@ -45,6 +41,15 @@ struct MoviePoster: View {
                             )
                     )
                 }
+            } label: {
+                movie.posterImage
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(height: 212)
+            }
+            
+            NavigationLink {
+                //TODO: 바로 예매 View 연동 예정
             } label: {
                 Text("바로 예매")
                     .font(.medium16)

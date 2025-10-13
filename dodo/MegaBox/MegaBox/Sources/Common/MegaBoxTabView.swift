@@ -23,7 +23,7 @@ struct MegaBoxTabView: View {
             }
             
             Tab("마이 페이지", systemImage: "person") {
-                
+                UserInfoView()
             }
         }
         .tint(.purple03)
