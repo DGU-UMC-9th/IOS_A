@@ -10,7 +10,6 @@ import SwiftUI
 struct BookingView: View {
     @StateObject private var vm = BookingViewModel()
     @State private var showingSheet: Bool = false
-    private var movieSelected: Int = 0
     
     var body: some View {
         NavigationStack {
@@ -18,7 +17,7 @@ struct BookingView: View {
                 VStack(spacing: 20) {
                     movieList
                     theaterList
-                    CalendarView(viewModel: CalendarViewModel())
+                    calendarSection
                     timeTable
                     Spacer()
                 }
@@ -57,7 +56,7 @@ struct BookingView: View {
                         )
                     Text(movie.title)
                         .font(.bold18)
-                        .foregroundColor(vm.selectedMovie == nil ? .gray : .primary)
+                        .foregroundColor(.primary)
                         .lineLimit(1)
                 } else {
                     Text("영화를 선택해주세요")
@@ -79,7 +78,7 @@ struct BookingView: View {
                 }
             }
             
-            ScrollView(.horizontal) {
+            ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
                     ForEach(vm.moiveList, id: \.id) { movie in
                         Button {
@@ -104,35 +103,65 @@ struct BookingView: View {
     }
     
     var theaterList: some View {
-        ScrollView(.horizontal) {
-            HStack {
-                ForEach(Theater.allCases, id: \.self) { theater in
-                    Button {
-                        if vm.selectedTheaters.contains(theater) {
-                            vm.selectedTheaters.remove(theater)
-                        } else {
-                            vm.selectedTheaters.insert(theater)
+        VStack(alignment: .leading, spacing: 8) {
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    ForEach(Theater.allCases, id: \.self) { theater in
+                        Button {
+                            if vm.selectedTheaters.contains(theater) {
+                                vm.selectedTheaters.remove(theater)
+                            } else {
+                                vm.selectedTheaters.insert(theater)
+                            }
+                        } label: {
+                            Text(theater.title)
+                                .font(.semiBold16)
+                                .foregroundStyle(vm.selectedTheaters.contains(theater) ? .white : .gray04)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 8)
+                                .background(
+                                    Capsule()
+                                        .foregroundStyle(vm.selectedTheaters.contains(theater) ? .purple03 : .gray02)
+                                )
                         }
-                    } label: {
-                        Text(theater.title)
-                            .font(.semiBold16)
-                            .foregroundStyle(vm.selectedTheaters.contains(theater) ? .white : .gray04)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 8)
-                            .background(
-                                Capsule()
-                                    .foregroundStyle(vm.selectedTheaters.contains(theater) ? .purple03 : .gray02)
-                            )
+                        .disabled(!vm.isTheaterSelectionEnabled)
+                        .opacity(vm.isTheaterSelectionEnabled ? 1 : 0)
                     }
                 }
             }
         }
     }
+    
+    var calendarSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            CalendarView(selectedDate: $vm.selectedDate)
+                .disabled(!vm.isDateSelectionEnabled)
+                .opacity(vm.isDateSelectionEnabled ? 1 : 0)
+        }
+    }
 
     var timeTable: some View {
-        VStack {
-            ForEach(vm.screeningSchedules, id: \.id){ schedule in
-                ScreeningView(screening: schedule)
+        VStack(spacing: 16) {
+            if vm.filteredSchedules.isEmpty {
+                VStack(spacing: 8) {
+                    Image(systemName: "film")
+                        .font(.system(size: 40))
+                        .foregroundStyle(.gray)
+                    
+                    if vm.selectedMovie == nil {
+                        Text("영화를 선택해주세요")
+                    } else if vm.selectedTheaters.isEmpty {
+                        Text("극장을 선택해주세요")
+                    } else {
+                        Text("상영 스케줄이 없습니다")
+                    }
+                }
+                .font(.body)
+                .foregroundStyle(.secondary)
+            } else {
+                ForEach(vm.filteredSchedules, id: \.id) { schedule in
+                    ScreeningView(screening: schedule)
+                }
             }
         }
     }

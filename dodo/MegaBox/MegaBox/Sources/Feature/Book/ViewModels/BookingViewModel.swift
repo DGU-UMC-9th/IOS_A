@@ -1,10 +1,3 @@
-//
-//  BookingViewModel.swift
-//  MegaBox
-//
-//  Created by 김도연 on 10/13/25.
-//
-
 import SwiftUI
 import Observation
 import Combine
@@ -13,13 +6,112 @@ class BookingViewModel: ObservableObject {
     //영화 선택 관련
     @Published var selectedMovie: Movie?
     @Published var selectedTheaters: Set<Theater> = []
+    @Published var selectedDate: Date = Date()
+    
     //영화 검색 관련
     @Published var query: String = ""
     @Published var results: [Movie] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
+    
+    // 활성화 상태
+    @Published var isTheaterSelectionEnabled = false
+    @Published var isDateSelectionEnabled = false
+    @Published var filteredSchedules: [ScreeningSchedule] = []
 
     private var bag = Set<AnyCancellable>()
+
+    init() {
+        results = moiveList
+        
+        // 영화 검색
+        $query
+            .debounce(for: .milliseconds(400), scheduler: DispatchQueue.main)
+            .removeDuplicates()
+            .handleEvents(receiveOutput: { [weak self] _ in
+                self?.errorMessage = nil
+            })
+            .flatMap { query in
+                self.search(query: query)
+            }
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                if case .failure(let err) = completion {
+                    self?.errorMessage = "검색 실패: \(err.localizedDescription)"
+                    self?.results = []
+                }
+            } receiveValue: { [weak self] items in
+                self?.results = items
+            }
+            .store(in: &bag)
+        
+        // 영화 선택 시 극장 선택 활성화
+        $selectedMovie
+            .map { $0 != nil }
+            .assign(to: &$isTheaterSelectionEnabled)
+        
+        // 극장 선택 시 날짜 선택 활성화
+        $selectedTheaters
+            .map { !$0.isEmpty }
+            .assign(to: &$isDateSelectionEnabled)
+        
+        // 영화, 극장, 날짜 모두 선택되면 스케줄 필터링
+        Publishers.CombineLatest3($selectedMovie, $selectedTheaters, $selectedDate)
+            .map { [weak self] movie, theaters, date -> [ScreeningSchedule] in
+                guard let self = self,
+                      movie != nil,
+                      !theaters.isEmpty,
+                      Calendar.current.isDateInToday(date) //오늘 날짜만 일단 나오게
+                else {
+                    return []
+                }
+                
+                // 선택된 극장에 해당하는 스케줄만 필터링
+                return self.screeningSchedules.filter { schedule in
+                    theaters.contains{ $0.title == schedule.branch }
+                }
+            }
+            .assign(to: &$filteredSchedules)
+        
+        // 영화 선택 해제 시 극장과 날짜도 초기화
+        $selectedMovie
+            .dropFirst()
+            .sink { [weak self] movie in
+                self?.selectedTheaters = []
+                self?.selectedDate = Date()
+                if movie == nil {
+                    self?.selectedTheaters.removeAll()
+                }
+            }
+            .store(in: &bag)
+    }
+
+    private func search(query: String) -> AnyPublisher<[Movie], Error> {
+        return Future<[Movie], Error> { [weak self] promise in
+            let delay = Double(Int.random(in: 300...700)) / 1000.0
+            guard let self else { return }
+            
+            DispatchQueue.global().asyncAfter(deadline: .now() + delay) {
+                let filtered = query.isEmpty ?
+                self.moiveList :
+                self.moiveList.filter { $0.title.lowercased().contains(query.lowercased()) }
+                promise(.success(filtered))
+            }
+        }
+        .handleEvents(
+            receiveSubscription: { _ in
+                DispatchQueue.main.async {
+                    self.isLoading = true
+                }
+            },
+            receiveCompletion: { _ in
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                }
+            }
+        )
+        .eraseToAnyPublisher()
+    }
     
     var moiveList: [Movie] = [
         Movie(posterImage: Image(.poster1), title: "어쩔수가없다", ageRating: 15),
@@ -103,55 +195,4 @@ class BookingViewModel: ObservableObject {
         )
     ]
     
-    init() {
-        results = moiveList
-        
-        $query
-            .debounce(for: .milliseconds(400), scheduler: DispatchQueue.main)
-            .removeDuplicates()
-            .handleEvents(receiveOutput: { [weak self] _ in
-                self?.errorMessage = nil
-            })
-            .flatMap { query in
-                self.search(query: query)
-            }
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] completion in
-                if case .failure(let err) = completion {
-                    self?.errorMessage = "검색 실패: \(err.localizedDescription)"
-                    self?.results = []
-                }
-            } receiveValue: { [weak self] items in
-                self?.results = items
-            }
-            .store(in: &bag)
-    }
-
-    private func search(query: String) -> AnyPublisher<[Movie], Error> {
-        return Future<[Movie], Error> { [weak self] promise in
-            let delay = Double(Int.random(in: 300...700)) / 1000.0
-            guard let self else { return }
-            
-            DispatchQueue.global().asyncAfter(deadline: .now() + delay) {
-                // 검색어가 비어있으면 전체 목록, 아니면 필터링
-                let filtered = query.isEmpty ?
-                self.moiveList :
-                self.moiveList.filter { $0.title.lowercased().contains(query.lowercased()) }
-                promise(.success(filtered))
-            }
-        }
-        .handleEvents(
-            receiveSubscription: { _ in
-                DispatchQueue.main.async {
-                    self.isLoading = true
-                }
-            },
-            receiveCompletion: { _ in
-                DispatchQueue.main.async {
-                    self.isLoading = false
-                }
-            }
-        )
-        .eraseToAnyPublisher()
-    }
 }

@@ -10,10 +10,10 @@ import Foundation
 
 @Observable
 class CalendarViewModel {
-    var selectedDate: Date
+    private var selectedDate: Binding<Date>
     let calendar: Calendar
     
-    init(selectedDate: Date = Date(), calendar: Calendar = .current) {
+    init(selectedDate: Binding<Date>, calendar: Calendar = .current) {
         self.selectedDate = selectedDate
         self.calendar = calendar
     }
@@ -26,10 +26,15 @@ class CalendarViewModel {
         }
     }
     
-    /// 선택된 날짜 변경
+    /// 선택된 날짜 변경 시 Binding 값을 직접 업데이트합니다.
     func selectDate(_ date: Date) {
-        guard !calendar.isDate(selectedDate, inSameDayAs: date) else { return }
-        selectedDate = date
+        // wrappedValue를 통해 Binding으로 연결된 원본 데이터를 변경합니다.
+        selectedDate.wrappedValue = date
+    }
+
+    /// View에서 날짜 선택 여부를 확인할 때 사용할 헬퍼 함수
+    func isDateSelected(_ date: Date) -> Bool {
+        let currentSelectedDate = selectedDate.wrappedValue
+        return calendar.isDate(date, inSameDayAs: currentSelectedDate)
     }
 }
-

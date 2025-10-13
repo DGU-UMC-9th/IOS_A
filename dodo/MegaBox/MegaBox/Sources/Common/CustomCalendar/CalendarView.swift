@@ -8,26 +8,28 @@
 import SwiftUI
 
 struct CalendarView: View {
-    @Bindable var viewModel: CalendarViewModel
+    @Binding var selectedDate: Date
     
     var body: some View {
-        LazyVGrid(
-            columns: Array(repeating: GridItem(.flexible(), spacing: 40), count: 7),
-            spacing: 5
-        ) {
-            ForEach(viewModel.weekDaysFromToday()) { day in
-                CalendarCell(
-                    day: day,
-                    isSelected: viewModel.calendar.isDate(day.date, inSameDayAs: viewModel.selectedDate)
-                ) {
-                    withAnimation(.spring(response: 0.4, dampingFraction: 0.6)) {
-                        viewModel.selectDate(day.date)
+            let viewModel = CalendarViewModel(selectedDate: $selectedDate)
+            
+            LazyVGrid(
+                columns: Array(repeating: GridItem(.flexible(), spacing: 40), count: 7),
+                spacing: 5
+            ) {
+                ForEach(viewModel.weekDaysFromToday()) { day in
+                    CalendarCell(
+                        day: day,
+                        isSelected: viewModel.isDateSelected(day.date)
+                    ) {
+                        withAnimation(.spring(response: 0.4, dampingFraction: 0.6)) {
+                            viewModel.selectDate(day.date)
+                        }
                     }
                 }
             }
+            .padding(.horizontal)
         }
-        .padding(.horizontal)
-    }
 }
 
 struct CalendarCell: View {
@@ -54,5 +56,5 @@ struct CalendarCell: View {
 }
 
 #Preview {
-    CalendarView(viewModel: CalendarViewModel())
+    CalendarView(selectedDate: .constant(Date()))
 }
