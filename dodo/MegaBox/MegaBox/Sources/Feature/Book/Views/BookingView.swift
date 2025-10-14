@@ -160,7 +160,7 @@ struct BookingView: View {
                 .foregroundStyle(.secondary)
             } else {
                 ForEach(vm.filteredSchedules, id: \.id) { schedule in
-                    ScreeningView(selectedMovie: vm.selectedMovie!, screening: schedule)
+                    ScreeningView(screening: schedule)
                 }
             }
         }
