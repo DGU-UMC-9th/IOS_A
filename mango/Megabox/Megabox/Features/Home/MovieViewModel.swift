@@ -64,7 +64,7 @@ class MovieViewModel {
         .init(
             movieTitle: "모노노케 히메",
             movieCount: "10만",
-            movieImageName: "movie2",
+            movieImageName: "mononoke",
             topPosterImageName: "TopPoster_f1",
             bottomPosterImageName: "BottomPoster_f1",
             originalTitle: "Princess Mononoke",
