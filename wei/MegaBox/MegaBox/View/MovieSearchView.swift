@@ -21,8 +21,10 @@ struct MovieSearchView: View {
     var body: some View {
         VStack(spacing: 20) {
             TextField("Search", text: $vm.query)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
                 .font(.regular18)
-                .padding(.horizontal)
+                .padding(.horizontal, 20)
+        
 
             if vm.isLoading {
                 ProgressView("검색중…")

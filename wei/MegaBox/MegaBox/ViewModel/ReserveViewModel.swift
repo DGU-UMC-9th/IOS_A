@@ -32,7 +32,8 @@ final class ReserveViewModel: ObservableObject {
     let theaters: [TheaterModel] = [
         .init(name: "크리리클라이너 1관", region: "강남"),
         .init(name: "BTS관 (7층 1관 [Laser])",   region: "홍대"),
-        .init(name: "BTS관 (9층 2관 [Laser])",  region: "홍대")
+        .init(name: "BTS관 (9층 2관 [Laser])",  region: "홍대"),
+        .init(name: "3관", region: "신촌")
     ]
 
     @Published private(set) var screenings: [ScreeningModel] = []

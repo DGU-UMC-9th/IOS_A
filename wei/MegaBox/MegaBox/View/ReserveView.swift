@@ -22,8 +22,10 @@ struct ReserveView: View {
             MovieSelection
             TheaterSelection
             WeekCalendarView(viewModel: calendarVM, reserveVM: vm)
+                .padding(.horizontal,24)
             ScreenSelection
-            Spacer()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            
         }
         .navigationDestination(for: String.self) { value in
             switch value {
@@ -68,21 +70,23 @@ struct ReserveView: View {
                     path.append("검색")
                 }, label:{
                     Text("전체영화")
-                        .font(.semiBold14)
-                        .foregroundStyle(Color.black)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 8)
-                                .stroke(Color.gray, lineWidth: 1)
-                                .background(Color.clear)
-                                .frame(width: 60, height: 24)
-                        )
+                            .font(.semiBold14)
+                            .foregroundStyle(Color.black)
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 6)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(Color.gray, lineWidth: 1)
+                            )
+                        
                 })
             }
             .padding(.horizontal,20)
+            .frame(width:400)
             
             
             ScrollView(.horizontal){
-                LazyHStack(spacing: 10) {
+                LazyHStack {
                     ForEach(vm.movies) { movie in
                         Button {
                             vm.selectedMovie = movie
@@ -94,6 +98,7 @@ struct ReserveView: View {
                                     .clipped()
                                     .frame(width:80, height:100)
                             }
+                            .border(Color.black)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                             .overlay(
                                 RoundedRectangle(cornerRadius: 8)
@@ -104,11 +109,12 @@ struct ReserveView: View {
                     }
                 }
                 .padding(.horizontal, 20)
-                .padding(.vertical, 8)
             }
+            .frame(width:400, height:100)
             
             
         }
+        .padding(.horizontal, 24)
         
     }
     
@@ -126,17 +132,17 @@ struct ReserveView: View {
                         .padding(.vertical, 8)
                         .frame(minHeight: 36)
                         .background(
-                            RoundedRectangle(cornerRadius: 8)
+                            RoundedRectangle(cornerRadius: 12)
                                 .fill(isOn ? Color.purple03 : Color.gray01)
                         )
                         .foregroundStyle(isOn ? Color.white : Color.gray05)
                 }
                 
             }
-            Spacer()
+            Spacer(minLength: 0)
         }
-        .padding(.trailing, 20)
-        .padding(.leading, 20)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal,24)
     }
     
     private var ScreenSelection: some View {
@@ -173,6 +179,8 @@ struct ReserveView: View {
                 }
             }
         }
+        .scrollIndicators(.hidden)
+        .contentMargins(.horizontal, 28)
         
     }
     
