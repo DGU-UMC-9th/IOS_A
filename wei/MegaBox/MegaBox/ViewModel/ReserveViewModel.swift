@@ -62,10 +62,11 @@ final class ReserveViewModel: ObservableObject {
     
     init() {
         self.screenings = Self.createDummyScreenings(movies: movies, theaters: theaters)
-        self.selectedMovie = movies.first
         pipeline()
     }
 
+    
+    
     
     private func pipeline() {
         Publishers.CombineLatest3($selectedMovie, $selectedRegions, $selectedDate)

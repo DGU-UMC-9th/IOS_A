@@ -53,7 +53,7 @@ struct ReserveView: View {
         VStack {
             HStack{
                 RoundedRectangle(cornerRadius: 4)
-                    .foregroundStyle(Color.orange)
+                    .foregroundStyle(vm.selectedMovie == nil ? Color.clear : Color.orange)
                     .overlay(
                         Text(vm.selectedMovie?.age.description ?? " ")
                             .font(.bold18)
@@ -61,7 +61,7 @@ struct ReserveView: View {
                     )
                     .frame(width:24,height: 24)
                 Spacer()
-                Text(vm.selectedMovie?.name ?? " ")
+                Text(vm.selectedMovie?.name ?? "예매하실 영화를 선택하세요")
                     .font(.bold18)
                     .foregroundStyle(Color.black)
                     .frame(width: 238, alignment: .topLeading)
@@ -98,7 +98,6 @@ struct ReserveView: View {
                                     .clipped()
                                     .frame(width:80, height:100)
                             }
-                            .border(Color.black)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                             .overlay(
                                 RoundedRectangle(cornerRadius: 8)
@@ -139,7 +138,6 @@ struct ReserveView: View {
                 }
                 
             }
-            Spacer(minLength: 0)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal,24)
