@@ -23,34 +23,36 @@ struct MovieSearchView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 12) {
-                if vm.isLoading {
-                    ProgressView("검색중…")
-                }
-                
                 if let error = vm.errorMessage {
                     Text(error).foregroundStyle(.red)
-                }
-                
-                ScrollView {
-                    LazyVGrid(columns: columns, spacing: 36) {
-                        ForEach(vm.results) { movie in
-                            VStack {
-                                movie.posterImage
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 95, height: 135)
-                                Text(movie.title)
-                                    .font(.semiBold14)
-                                    .lineLimit(1)
-                            }
-                            .onTapGesture {
-                                onSelect(movie)
-                                dismiss()
+                } else if vm.isLoading {
+                    ProgressView("검색중…")
+                } else if vm.results.isEmpty {
+                    Text("검색 결과가 없습니다.")
+                } else {
+                    ScrollView {
+                        LazyVGrid(columns: columns, spacing: 36) {
+                            ForEach(vm.results) { movie in
+                                VStack {
+                                    movie.posterImage
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 95, height: 135)
+                                    Text(movie.title)
+                                        .font(.semiBold14)
+                                        .lineLimit(1)
+                                }
+                                .onTapGesture {
+                                    onSelect(movie)
+                                    dismiss()
+                                }
                             }
                         }
+                        .padding(.horizontal, 16)
                     }
-                    .padding(.horizontal, 16)
                 }
+                
+                
             }
             .searchable(text: $vm.query, placement: .automatic, prompt: "영화명을 입력해주세요")
             .toolbar {
