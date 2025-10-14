@@ -11,17 +11,20 @@ import SwiftUI
 @Observable
 class LoginViewModel{
     
+    var id: String = ""
+    var password: String = ""
+    
     let LoginModel: [LoginModel] = [
         .init(username: "", password: "")
     ]
     
     
-//    func login(id:String, password:String){
-//        
-//        self.id = id
-//        self.password = password
-//        
-//        print("로그인 시도: ID - \(id), PW - \(password)")
-//    }
+    func login(id:String, password:String){
+        
+        self.id = id
+        self.password = password
+        
+        print("로그인 시도: ID - \(id), PW - \(password)")
+    }
     
 }

@@ -10,7 +10,7 @@ import SwiftUI
 
 struct MovieInfoView: View {
     
-    let movie: Movie
+    let movie: MovieModel
     var viewModel : MovieInfoViewModel = .init()
     @Environment(\.dismiss) private var dismiss
     
@@ -54,7 +54,7 @@ struct MovieInfoView: View {
         
     }
     
-    private func BottomView(info: MovieInfo, movie: Movie) -> some View {
+    private func BottomView(info: MovieInfo, movie: MovieModel) -> some View {
         VStack(spacing:10){
             HStack(spacing: 0) {
                         VStack(spacing: 8) {
@@ -105,10 +105,11 @@ struct MovieInfoView: View {
 
 #Preview {
     NavigationStack {
-        MovieInfoView(movie: Movie(
+        MovieInfoView(movie: MovieModel(
             name: "f1: 더 무비",
             imageName: "f1",
-            audience: "20만"
+            audience: "20만",
+            age: 12
         ))
     }
 }

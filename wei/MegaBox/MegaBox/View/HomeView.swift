@@ -96,7 +96,7 @@ struct HomeView: View {
         
     }
     
-    private func MovieCard(_ movie: Movie) -> some View {
+    private func MovieCard(_ movie: MovieModel) -> some View {
         VStack(alignment: .leading ,spacing: 8) {
             Button(action:{
                 path.append(movie.id)
