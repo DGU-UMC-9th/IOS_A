@@ -80,7 +80,7 @@ struct BookingView: View {
             
             ScrollView(.horizontal) {
                 HStack {
-                    ForEach(vm.moiveList, id: \.id) { movie in
+                    ForEach(vm.movieList, id: \.id) { movie in
                         Button {
                             vm.selectedMovie = movie
                         } label: {
@@ -160,7 +160,7 @@ struct BookingView: View {
                 .foregroundStyle(.secondary)
             } else {
                 ForEach(vm.filteredSchedules, id: \.id) { schedule in
-                    ScreeningView(screening: schedule)
+                    ScreeningView(selectedMovie: vm.selectedMovie!, screening: schedule)
                 }
             }
         }
