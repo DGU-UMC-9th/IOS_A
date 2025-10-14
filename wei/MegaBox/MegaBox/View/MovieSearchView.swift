@@ -20,10 +20,7 @@ struct MovieSearchView: View {
     
     var body: some View {
         VStack(spacing: 20) {
-            TextField("Search", text: $vm.query)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .font(.regular18)
-                .padding(.horizontal, 20)
+            Spacer()
         
 
             if vm.isLoading {
@@ -43,8 +40,13 @@ struct MovieSearchView: View {
                 }
                 .padding(.horizontal, 20)
             }
+            
+            TextField("Search", text: $vm.query)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .font(.regular18)
+                .padding(.horizontal, 20)
         }
-        .navigationTitle("영화 검색")
+        .navigationTitle("영화 선택")
     }
     
     private func MovieCard(movie: MovieModel) -> some View {

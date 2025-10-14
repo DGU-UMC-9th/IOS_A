@@ -15,9 +15,10 @@ struct ReserveView: View {
     @StateObject private var vm = ReserveViewModel()
     @State private var calendarVM = CalendarViewModel()
     @Binding var path: NavigationPath
+    @State private var showingSheet: Bool = false
     
     var body: some View {
-        VStack(spacing:20){
+        VStack(alignment:.leading, spacing: 20){
             Navigation
             MovieSelection
             TheaterSelection
@@ -27,11 +28,9 @@ struct ReserveView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             
         }
-        .navigationDestination(for: String.self) { value in
-            switch value {
-            case "검색": MovieSearchView()
-            default: EmptyView()
-            }
+        .sheet(isPresented: $showingSheet) {
+            MovieSearchView()
+            .presentationDragIndicator(.visible)
         }
     }
     
@@ -67,7 +66,7 @@ struct ReserveView: View {
                     .frame(width: 238, alignment: .topLeading)
                 Spacer()
                 Button(action:{
-                    path.append("검색")
+                    showingSheet.toggle()
                 }, label:{
                     Text("전체영화")
                             .font(.semiBold14)
@@ -139,7 +138,6 @@ struct ReserveView: View {
                 
             }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal,24)
     }
     
