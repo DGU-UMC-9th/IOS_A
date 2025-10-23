@@ -87,6 +87,7 @@ struct HomeView: View {
                 LazyHStack {
                     ForEach(vm.posterList) { poster in
                         MoviePoster(movie: poster)
+                            .padding(.vertical, 4)
                     }
                 }
             }
