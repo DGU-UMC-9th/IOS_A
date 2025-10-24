@@ -34,10 +34,17 @@ struct MovieSearchView: View {
                         LazyVGrid(columns: columns, spacing: 36) {
                             ForEach(vm.results) { movie in
                                 VStack {
-                                    movie.posterImage
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(width: 95, height: 135)
+                                    if let image = movie.posterImage {
+                                        image
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fit)
+                                            .frame(width: 95, height: 135)
+                                        
+                                    } else {
+                                        Rectangle()
+                                            .foregroundStyle(.gray04)
+                                            .frame(width: 95, height: 135)
+                                    }
                                     Text(movie.title)
                                         .font(.semiBold14)
                                         .lineLimit(1)
