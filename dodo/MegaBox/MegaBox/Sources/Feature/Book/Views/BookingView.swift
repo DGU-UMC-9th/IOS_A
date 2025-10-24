@@ -22,9 +22,10 @@ struct BookingView: View {
                     Spacer()
                 }
                 .sheet(isPresented: $showingSheet) {
-                    MovieSearchView{ selected in
+                    MovieSearchView { selected in
                         vm.selectedMovie = selected
                     }
+                    .environmentObject(vm)
                     .presentationDragIndicator(.visible)
                 }
                 .padding()
@@ -39,6 +40,12 @@ struct BookingView: View {
                 .toolbarBackground(.visible)
                 .toolbarBackground(.purple03)
             }
+            .overlay {
+                if vm.isLoading {
+                    ProgressView()
+                        .scaleEffect(1.5)
+                }
+            }
         }
     }
     
@@ -46,7 +53,7 @@ struct BookingView: View {
         VStack {
             HStack {
                 if let movie = vm.selectedMovie {
-                    Text("\(movie.ageRating)")
+                    Text(movie.ageRating)
                         .foregroundStyle(.white)
                         .font(.bold18)
                         .frame(width: 26, height: 26)
@@ -78,22 +85,42 @@ struct BookingView: View {
                 }
             }
             
-            ScrollView(.horizontal) {
-                HStack {
-                    ForEach(vm.movieList, id: \.id) { movie in
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 12) {
+                    ForEach(vm.movies, id: \.id) { movie in
                         Button {
                             vm.selectedMovie = movie
                         } label: {
-                            movie.posterImage
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(height: 80)
-                                .clipShape(RoundedRectangle(cornerRadius: 12))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .stroke(vm.selectedMovie?.title == movie.title ? .purple03 : .clear, lineWidth: 3)
-                                        .padding(1)
-                                )
+                            if let image = movie.posterImage {
+                                image
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(height: 80)
+                                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .stroke(vm.selectedMovie?.id == movie.id ? .purple03 : .clear, lineWidth: 3)
+                                            .padding(1)
+                                    )
+                            } else {
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(.gray02)
+                                    .frame(width: 60, height: 80)
+                                    .overlay(
+                                        VStack {
+                                            Text(movie.title)
+                                                .font(.caption)
+                                                .foregroundStyle(.gray04)
+                                                .multilineTextAlignment(.center)
+                                        }
+                                        .padding(4)
+                                    )
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .stroke(vm.selectedMovie?.id == movie.id ? .purple03 : .clear, lineWidth: 3)
+                                            .padding(1)
+                                    )
+                            }
                         }
                     }
                 }
@@ -104,7 +131,7 @@ struct BookingView: View {
     
     var theaterList: some View {
         VStack(alignment: .leading, spacing: 8) {
-            ScrollView(.horizontal) {
+            ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
                     ForEach(Theater.allCases, id: \.self) { theater in
                         Button {
@@ -121,14 +148,14 @@ struct BookingView: View {
                                 .padding(.vertical, 8)
                                 .background(
                                     Capsule()
-                                        .foregroundStyle(vm.selectedTheaters.contains(theater) ? .purple03 : .gray02)
+                                        .foregroundStyle(vm.selectedTheaters.contains(theater) ? .purple03 : .gray02)   
                                 )
                         }
                         .disabled(!vm.isTheaterSelectionEnabled)
-                        .opacity(vm.isTheaterSelectionEnabled ? 1 : 0)
                     }
                 }
             }
+            .opacity(vm.isTheaterSelectionEnabled ? 1 : 0)
         }
     }
     
@@ -136,8 +163,8 @@ struct BookingView: View {
         VStack(alignment: .leading, spacing: 8) {
             CalendarView(selectedDate: $vm.selectedDate)
                 .disabled(!vm.isDateSelectionEnabled)
-                .opacity(vm.isDateSelectionEnabled ? 1 : 0)
         }
+        .opacity(vm.isDateSelectionEnabled ? 1 : 0)
     }
 
     var timeTable: some View {
@@ -152,12 +179,15 @@ struct BookingView: View {
                         Text("영화를 선택해주세요")
                     } else if vm.selectedTheaters.isEmpty {
                         Text("극장을 선택해주세요")
+                    } else if !vm.isDateSelectionEnabled {
+                        Text("날짜를 선택해주세요")
                     } else {
-                        Text("상영 스케줄이 없습니다")
+                        Text("선택한 날짜에 상영 스케줄이 없습니다")
                     }
                 }
                 .font(.body)
                 .foregroundStyle(.secondary)
+                .padding(.vertical, 40)
             } else {
                 ForEach(vm.filteredSchedules, id: \.id) { schedule in
                     ScreeningView(screening: schedule)
