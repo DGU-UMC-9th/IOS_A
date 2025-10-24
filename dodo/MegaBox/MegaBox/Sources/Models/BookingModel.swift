@@ -9,19 +9,18 @@ import Foundation
 import SwiftUI
 
 struct Movie: Identifiable {
-    let id = UUID()
-    var posterImage: Image
+    let id: String
+    var posterImage: Image?
     var title: String
-    var ageRating: Int
+    var ageRating: String
+    var schedules: [ScreeningSchedule]  // 영화별 스케줄 포함
 }
 
-//TODO: var movie: Movie 추가
-struct Screening: Identifiable {
+struct ScreeningSchedule: Identifiable {
     let id = UUID()
-    var startTime: String
-    var endTime: String
-    var availableSeats: Int
-    var totalSeats: Int
+    let date: String
+    let branch: String
+    let theaters: [Theaters]
 }
 
 struct Theaters: Identifiable {
@@ -31,8 +30,10 @@ struct Theaters: Identifiable {
     let times: [Screening]
 }
 
-struct ScreeningSchedule: Identifiable {
+struct Screening: Identifiable {
     let id = UUID()
-    let branch: String
-    let theaters: [Theaters]
+    var startTime: String
+    var endTime: String
+    var availableSeats: Int
+    var totalSeats: Int
 }
