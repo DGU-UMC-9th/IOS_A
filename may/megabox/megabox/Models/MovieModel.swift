@@ -57,3 +57,14 @@ struct MovieFeed: Identifiable {
     var description: String
     var posterImage: Image
 }
+
+struct MovieBooking : Identifiable, Equatable {
+    let id = UUID()
+    var posterImage: Image
+    var title: String
+    var ageRating: String
+    
+    static func == (lhs: MovieBooking, rhs: MovieBooking) -> Bool {
+        return lhs.id == rhs.id
+    }
+}
