@@ -72,7 +72,6 @@ struct ReservationView: View {
     }
     
     var theaterSelectSection: some View {
-        // Build selected day string (MM.dd) from TheaterInfoViewModel.selectedDate
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "ko_KR")
         formatter.timeZone = TimeZone.current
@@ -103,22 +102,23 @@ struct ReservationView: View {
                             Text(info.theaterDetail)
                                 .font(.pretend(type: .bold, size: 18))
                             
-                            HStack(spacing:36){
+                            HStack(spacing:30){
                                 ForEach(info.movieTime){ timeInfo in
                                     VStack(spacing:4){
                                         Text(timeInfo.startTime)
-                                            .font(.pretend(type: .bold, size: 16))
+                                            .font(.pretend(type: .bold, size: 14))
                                         Text("~\(timeInfo.endTime)")
                                             .font(.pretend(type: .regular, size: 12))
                                             .foregroundStyle(Color.gray03)
                                         Text("\(timeInfo.leftSeats) / \(timeInfo.totalSeats)")
-                                            .font(.pretend(type: .semibold, size: 12))
+                                            .font(.pretend(type: .semibold, size: 10))
                                             .foregroundStyle(Color.purple03)
                                     }
-                                    .padding(10)
+                                    .padding(5)
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 12)
                                             .stroke(Color.gray02, lineWidth: 1)
+                                            .frame(minWidth: 70)
                                     )
                                 }
                             }

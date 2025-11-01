@@ -9,6 +9,7 @@ import SwiftUI
 
 struct movieCardSection: View{
     @ObservedObject var movieViewModel: MovieSelectViewModel
+    @State private var isSheetShow = false
     
     var body: some View {VStack{
         // moviCard 헤더부분
@@ -32,7 +33,9 @@ struct movieCardSection: View{
             
             Spacer()
             
-            Button(action: {}){
+            Button(action: {
+                isSheetShow = true
+            }){
                 Text("전체영화")
                     .padding(10)
                     .font(.pretend(type: .semibold, size: 14))
@@ -63,5 +66,8 @@ struct movieCardSection: View{
         .frame(maxWidth: .infinity, alignment: .top)
     }
     .padding(.horizontal, 10)
+    .sheet(isPresented: $isSheetShow){
+        TotalMovieSheet()
+        }
     }
 }
