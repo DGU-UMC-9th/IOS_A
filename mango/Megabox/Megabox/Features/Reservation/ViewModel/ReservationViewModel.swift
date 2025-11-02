@@ -10,7 +10,7 @@ import Combine
 
 class MovieSelectViewModel: ObservableObject {
     public var movies:[MovieSelectModel] = [
-        .init(movieImageName: "f1", title: "F1", isSelected: false),
+        .init(movieImageName: "f1", title: "F1 더 무비", isSelected: false),
         .init(movieImageName: "movie3", title: "주술회전", isSelected: false),
         .init(movieImageName: "movie5", title: "어쩔수가없다", isSelected: false),
         .init(movieImageName: "face", title: "얼굴", isSelected: false),
@@ -61,7 +61,7 @@ class TheaterInfoViewModel: ObservableObject{
             .sink { [weak self] selectedMovie in
                 guard let self = self else {return}
                 if let movie = selectedMovie {
-                    self.loadDummyData(for: movie)
+                    self.fetchSchedules(for: movie)
                 }else{
                     self.allTheaterInfos = []
                 }
@@ -77,55 +77,52 @@ class TheaterInfoViewModel: ObservableObject{
         }
     }
     
+    func fetchSchedules(for movie: MovieSelectModel){
+        // 1. 백그라운드 스레드에서 비동기 처리
+        DispatchQueue.global().async {
+            // 2. JSON 파일 찾기
+            guard let url = Bundle.main.url(
+                forResource: "MovieSchedule", withExtension: "json")
+            else {
+                print("json 파일을 찾을 수 없습니다.")
+                return
+                }
+            
+            do {
+                // 3. 파일에서 데이터 읽기
+                let data = try Data(contentsOf: url)
+                
+                // 4. JSON 디코딩
+                let decoded = try JSONDecoder().decode(APIResponse.self, from:data)
+                let movies = decoded.data.movies
+                
+                // 5. 해당 영화 제목과 일치하는 항목 찾기
+                if let matched = movies.first(where: {$0.title == movie.title}){
+                    let theaterInfos = matched.toTheaterInfos() // DTO -> Domain 변환
+                    
+                    // 6. 메인스레드에서 UI
+                    DispatchQueue.main.async {
+                        self.allTheaterInfos = theaterInfos
+                        print("상영 정보 로드 완료")
+                    }
+                } else {
+                    DispatchQueue.main.async{
+                        self.allTheaterInfos = []
+                        print("관련 상영 정보가 없습니다")
+                    }
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    print("Failed to decode JSON: \(error.localizedDescription)")
+                    self.allTheaterInfos = []
+                }
+            }
+        }
+    }
+    
     private static func getTodayString() -> String {
             let formatter = DateFormatter()
             formatter.dateFormat = "MM.dd"
             return formatter.string(from: Date())
         }
-    
-    private func loadDummyData(for movie: MovieSelectModel){
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "ko_KR")
-        formatter.dateFormat = "MM.dd"
-    
-        let today = formatter.string(from: Date())
-        
-        switch movie.title{
-        case "F1" :
-            allTheaterInfos = [
-                TheaterInfo(theater: .gangnam,
-                            movie: movie,
-                            theaterDetail: "크리클라이너 1관",
-                            movieTime: [
-                                MovieTime(startTime: "11:30", endTime: "13:58", leftSeats: 109 , totalSeats: 116),
-                                MovieTime(startTime: "14:20", endTime: "16:48", leftSeats: 19, totalSeats: 116),
-                                MovieTime(startTime: "17:05", endTime: "19:28", leftSeats: 1, totalSeats: 116),
-                                MovieTime(startTime: "19:45", endTime: "22:02", leftSeats: 100, totalSeats: 116),
-                                MovieTime(startTime: "22:20", endTime: "00:04", leftSeats: 116, totalSeats: 116)
-                            ],
-                            movieDate: today),
-                TheaterInfo(theater: .hongdae,
-                            movie: movie,
-                            theaterDetail: "BTS관(7층 1관 [Laser])",
-                            movieTime: [
-                                MovieTime(startTime: "9:30", endTime: "11:50", leftSeats: 75, totalSeats: 116),
-                                MovieTime(startTime: "12:00", endTime: "14:26", leftSeats: 102, totalSeats: 116),
-                                MovieTime(startTime: "14:45", endTime: "17:04", leftSeats: 88, totalSeats: 116)
-                            ],
-                            movieDate: today),
-                TheaterInfo(theater: .hongdae,
-                            movie: movie,
-                            theaterDetail: "BTS관(9층 2관 [Laser])",
-                            movieTime: [
-                                MovieTime(startTime: "11:30", endTime: "13:58", leftSeats: 34, totalSeats: 116),
-                                MovieTime(startTime: "14:10", endTime: "16:32", leftSeats: 100, totalSeats: 116),
-                                MovieTime(startTime: "16:50", endTime: "19:00", leftSeats: 13, totalSeats: 116),
-                                MovieTime(startTime: "19:20", endTime: "21:40", leftSeats: 92, totalSeats: 116)
-                            ],
-                            movieDate: today)
-            ]
-        default:
-            allTheaterInfos = []
-        }
-    }
 }
