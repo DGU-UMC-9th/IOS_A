@@ -14,10 +14,10 @@ struct TabSectionView: View {
                 HomeView()
             }
             Tab("바로 예매", systemImage: "ticket") {
-                HomeView()
+                MovieBookingView()
             }
             Tab("모바일 오더", systemImage: "popcorn") {
-                HomeView()
+                
             }
             Tab("마이페이지", systemImage: "person") {
                 UserInfoView()

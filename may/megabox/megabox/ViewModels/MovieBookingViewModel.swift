@@ -20,25 +20,19 @@ final class MovieBookingViewModel: ObservableObject {
     @Published private(set) var canSelectDate: Bool = false
     @Published private(set) var shouldShowSchedule: Bool = false
     @Published private(set) var isSelectedDateToday: Bool = true
-    // 🔧 수정: private(set) 제거
     @Published var schedulesToShow: [Theater: [ScreeningSchedule]] = [:]
     
-    // ✅ 영화 목록
-    let movieList: [MovieBooking] = [
-        MovieBooking(posterImage: Image(.movie1), title: "어쩔수가없다", ageRating: "15"),
-        MovieBooking(posterImage: Image(.movie2), title: "극장판 귀멸의 칼날: 무한성 편", ageRating: "15"),
-        MovieBooking(posterImage: Image(.movie3), title: "F1: 더 무비", ageRating: "15"),
-        MovieBooking(posterImage: Image(.movie4), title: "얼굴", ageRating: "15"),
-        MovieBooking(posterImage: Image(.movie5), title: "모노노케 히메", ageRating: "ALL"),
-        MovieBooking(posterImage: Image(.movie6), title: "야당", ageRating: "15"),
-        MovieBooking(posterImage: Image(.movie7), title: "보스", ageRating: "15"),
-        MovieBooking(posterImage: Image(.movie8), title: "THE ROSES", ageRating: "15")
-    ]
+    @Published var movieList: [MovieBooking] = []
+    @Published var isLoading = false
+    @Published var errorMessage: String?
     
+    // ✅ 스케줄 정보를 포함한 DTO 데이터 보관
+    private var movieDTOs: [MovieDTO] = []
     private var cancellables = Set<AnyCancellable>()
     
     init() {
         setupBindings()
+        loadMoviesFromJSON()
     }
     
     private func setupBindings() {
@@ -64,7 +58,7 @@ final class MovieBookingViewModel: ObservableObject {
             .map { Calendar.current.isDateInToday($0) }
             .assign(to: &$isSelectedDateToday)
         
-        // 🔧 수정: 영화 변경 시 극장/날짜 초기화 (UX에 따라 제거 가능)
+        // 영화 변경 시 극장/날짜 초기화
         $selectedMovie
             .dropFirst()
             .sink { [weak self] _ in
@@ -81,53 +75,116 @@ final class MovieBookingViewModel: ObservableObject {
                     self.schedulesToShow = [:]
                     return
                 }
-                // 🔧 수정: 날짜를 실제로 활용
+                // 날짜를 실제로 활용
                 self.schedulesToShow = self.getSchedules(for: movie, theaters: theaters, date: date)
             }
             .store(in: &cancellables)
     }
     
+    // MARK: - JSON Loading
+    private func loadMoviesFromJSON() {
+        isLoading = true
+        errorMessage = nil
+        
+        // 백그라운드 스레드에서 JSON 로드
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            guard let self = self else { return }
+            
+            do {
+                guard let url = Bundle.main.url(forResource: "MovieSchedule", withExtension: "json") else {
+                    throw MovieLoadError.fileNotFound
+                }
+                
+                let data = try Data(contentsOf: url)
+                
+                let decoder = JSONDecoder.movieScheduleDecoder
+                let apiResponse = try decoder.decode(ApiResponse.self, from: data)
+                
+                guard let movieDTOs = apiResponse.data?.movies, !movieDTOs.isEmpty else {
+                    throw MovieLoadError.emptyData
+                }
+                
+                let domainMovies = movieDTOs.map { $0.toDomain() }
+                
+                DispatchQueue.main.async {
+                    self.movieDTOs = movieDTOs
+                    self.movieList = domainMovies
+                    self.isLoading = false
+                }
+                
+            } catch let error as MovieLoadError {
+                DispatchQueue.main.async {
+                    self.errorMessage = error.localizedDescription
+                    self.isLoading = false
+                    print("영화 로드 에러: \(error.localizedDescription)")
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    self.errorMessage = "알 수 없는 오류가 발생했습니다: \(error.localizedDescription)"
+                    self.isLoading = false
+                    print("에러: \(error)")
+                }
+            }
+        }
+    }
+    
+    // MARK: - Schedule Filtering
+    private func getSchedules(for movie: MovieBooking, theaters: Set<Theater>, date: Date) -> [Theater: [ScreeningSchedule]] {
+        guard let movieDTO = movieDTOs.first(where: { $0.id == movie.id }) else {
+            print("영화를 찾을 수 없음: \(movie.id)")
+            return [:]
+        }
+        
+        var result: [Theater: [ScreeningSchedule]] = [:]
+        
+        // 선택한 날짜와 일치하는 스케줄 필터링
+        for schedule in movieDTO.schedules {
+            // 날짜 비교
+            guard Calendar.current.isDate(schedule.date, inSameDayAs: date) else {
+                continue
+            }
+            
+            // 극장 필터링
+            for area in schedule.areas {
+                guard let theater = Theater(rawValue: area.area),
+                      theaters.contains(theater) else {
+                    continue
+                }
+                
+                // DTO → Domain 변환
+                let screeningSchedules = area.items.map {
+                    $0.toDomain(area: theater.title)
+                }
+                
+                result[theater, default: []].append(contentsOf: screeningSchedules)
+            }
+        }
+        return result
+    }
+    
+    // MARK: - Actions
     func resetSelection() {
         selectedMovie = nil
         selectedTheaters = []
         selectedDate = Date()
         schedulesToShow = [:]
     }
+}
+
+// MARK: - Error Handling
+enum MovieLoadError: LocalizedError {
+    case fileNotFound
+    case emptyData
+    case decodingFailed
     
-    private func getSchedules(for movie: MovieBooking, theaters: Set<Theater>, date: Date) -> [Theater: [ScreeningSchedule]] {
-        var schedules: [Theater: [ScreeningSchedule]] = [:]
-        
-        // 임시
-        let isToday = Calendar.current.isDateInToday(date)
-        
-        for theater in theaters {
-            schedules[theater] = isToday ? createDummySchedule(for: theater) : []
+    var errorDescription: String? {
+        switch self {
+        case .fileNotFound:
+            return "json 파일을 찾을 수 없습니다."
+        case .emptyData:
+            return "데이터가 비어있습니다."
+        case .decodingFailed:
+            return "JSON 데이터를 읽는데 실패했습니다."
         }
-        return schedules
-    }
-    
-    private func createDummySchedule(for theater: Theater) -> [ScreeningSchedule] {
-        return [
-            ScreeningSchedule(
-                theaterName: "\(theater.title) 1관",
-                screenType: "2D",
-                times: [
-                    ScreeningTime(startTime: "11:30", endTime: "13:58", availableSeats: 109, totalSeats: 116),
-                    ScreeningTime(startTime: "14:20", endTime: "16:48", availableSeats: 19, totalSeats: 116),
-                    ScreeningTime(startTime: "17:05", endTime: "19:28", availableSeats: 1, totalSeats: 116),
-                    ScreeningTime(startTime: "19:45", endTime: "22:02", availableSeats: 100, totalSeats: 116),
-                    ScreeningTime(startTime: "22:20", endTime: "00:04", availableSeats: 116, totalSeats: 116)
-                ]
-            ),
-            ScreeningSchedule(
-                theaterName: "\(theater.title) 2관",
-                screenType: "Laser",
-                times: [
-                    ScreeningTime(startTime: "09:30", endTime: "11:50", availableSeats: 75, totalSeats: 116),
-                    ScreeningTime(startTime: "12:00", endTime: "14:26", availableSeats: 102, totalSeats: 116),
-                    ScreeningTime(startTime: "14:45", endTime: "17:04", availableSeats: 88, totalSeats: 116)
-                ]
-            )
-        ]
     }
 }
