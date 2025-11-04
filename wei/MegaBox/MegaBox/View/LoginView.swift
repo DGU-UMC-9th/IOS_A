@@ -5,7 +5,7 @@ import Observation
 
 struct LoginView: View {
     
-    private var viewModel: LoginViewModel = .init()
+    @State var viewModel: LoginViewModel
     
     @AppStorage("id") private var id: String = ""
     @AppStorage("password") private var password: String = ""
@@ -13,11 +13,10 @@ struct LoginView: View {
     
     @State private var idInput: String = ""
     @State private var passwordInput: String = ""
-    @State private var isLoggedIn: Bool = false
     
     
     var body: some View {
-        if isLoggedIn {
+        if viewModel.isLoggedIn {
                     MainTabView()
                 }
         else{
@@ -76,8 +75,8 @@ struct LoginView: View {
     private var ButtonSection: some View {
         VStack(spacing: 17) {
             Button {
-                viewModel.login(id:idInput, password: passwordInput)
-                    isLoggedIn = true
+                viewModel.login(id: idInput, password: passwordInput)
+                
                 } label: {
                     RoundedRectangle(cornerRadius: 10)
                         .fill(.purple03)
@@ -149,5 +148,5 @@ func devicePreviews<Content: View>(
 
 
 #Preview {
-    LoginView()
+    LoginView(viewModel: LoginViewModel())
 }

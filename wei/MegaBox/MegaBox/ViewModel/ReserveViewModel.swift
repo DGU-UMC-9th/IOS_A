@@ -17,11 +17,11 @@ final class ReserveViewModel: ObservableObject {
         let times: [ScreeningModel]
     }
 
-    
+    // 이미 로컬에 있는 영화들 (id = UUID)
     @Published private(set) var movies: [MovieModel] = [
-        .init(name:"어쩔수가 없다", imageName: "djWjftnrk", audience:"20만", age:15),
-        .init(name:"극장판 귀멸의 칼날", imageName:"infinityCastle", audience:"60만",age:15),
-        .init(name:"F1: 더 무비", imageName: "f1" , audience:"10만",age:12),
+        .init(name:"어쩔수가없다", imageName: "djWjftnrk", audience:"20만", age:15),
+        .init(name:"귀멸의 칼날: 무한성", imageName:"infinityCastle", audience:"60만",age:15),
+        .init(name:"F1 더 무비", imageName: "f1" , audience:"10만",age:12),
         .init(name:"보스", imageName: "boss" , audience:"30만",age:15),
         .init(name:"모노노케 히메", imageName: "mononoke" , audience:"40만",age:12),
         .init(name:"야당", imageName: "yaDang" , audience:"50만",age:18),
@@ -29,12 +29,8 @@ final class ReserveViewModel: ObservableObject {
         .init(name:"the Roses", imageName: "theRoses" , audience:"80만",age:15)
     ]
 
-    let theaters: [TheaterModel] = [
-        .init(name: "크리리클라이너 1관", region: "강남"),
-        .init(name: "BTS관 (7층 1관 [Laser])",   region: "홍대"),
-        .init(name: "BTS관 (9층 2관 [Laser])",  region: "홍대"),
-        .init(name: "3관", region: "신촌")
-    ]
+    
+    @Published var theaters: [TheaterModel] = []
 
     @Published private(set) var screenings: [ScreeningModel] = []
     @Published var calendarViewModel = CalendarViewModel()
@@ -48,7 +44,6 @@ final class ReserveViewModel: ObservableObject {
 
     private var bag = Set<AnyCancellable>()
 
-   
     var regions: [String] {
         Array(Set(theaters.compactMap { $0.region })).sorted()
     }
@@ -59,15 +54,11 @@ final class ReserveViewModel: ObservableObject {
         else { selectedRegions.insert(region) }
     }
 
-    
     init() {
-        self.screenings = Self.createDummyScreenings(movies: movies, theaters: theaters)
         pipeline()
+        loadAndMergeShowtimes(fromResource: "MovieSchedule")
     }
 
-    
-    
-    
     private func pipeline() {
         Publishers.CombineLatest3($selectedMovie, $selectedRegions, $selectedDate)
             .sink { [weak self] (movie, regions, date) in
@@ -76,7 +67,6 @@ final class ReserveViewModel: ObservableObject {
             .store(in: &bag)
     }
 
-   
     private func filterShowtimes(
         movie: MovieModel?,
         regions: Set<String>,
@@ -115,53 +105,164 @@ final class ReserveViewModel: ObservableObject {
     }
 }
 
-//더미데이터 생성
-private extension ReserveViewModel {
-    static func createDummyScreenings(movies: [MovieModel], theaters: [TheaterModel]) -> [ScreeningModel] {
-        guard let 귀멸 = movies.first(where: { $0.name.contains("귀멸") }),
-              let 모노노케 = movies.first(where: { $0.name.contains("모노노케") }),
-              let f1 = movies.first(where: { $0.name.contains("F1") }),
-              let 극장1 = theaters.first,
-              let 극장2 = theaters.dropFirst().first,
-              let 극장3 = theaters.last else {
-            return []
+// MARK: - JSON 로드 & 병합
+extension ReserveViewModel {
+
+    func loadAndMergeShowtimes(fromResource name: String, ext: String = "json") {
+        Task { await loadAndMergeShowtimesAsync(fromResource: name, ext: ext) }
+    }
+
+    @MainActor
+    private func loadAndMergeShowtimesAsync(fromResource name: String, ext: String) async {
+        isLoading = true
+        defer { isLoading = false }
+
+        do {
+            guard let url = Bundle.main.url(forResource: name, withExtension: ext) else {
+                errorMessage = "파일을 찾을 수 없어요: \(name).\(ext)"
+                print("❌ 파일 없음: \(name).\(ext)")
+                return
+            }
+            
+            guard FileManager.default.fileExists(atPath: url.path) else {
+                errorMessage = "파일이 존재하지 않아요: \(url.lastPathComponent)"
+                print("❌ 파일 경로 없음: \(url.path)")
+                return
+            }
+            
+            print("✅ JSON 파일 찾음: \(url.lastPathComponent)")
+            
+            let data = try await Task.detached(priority: .userInitiated) {
+                try Data(contentsOf: url)
+            }.value
+
+            print("✅ JSON 데이터 로드 완료: \(data.count) bytes")
+
+            // ✅ 수정: APIResponse로 디코딩 후 data 추출
+            let decoder = JSONDecoder()
+            let response = try decoder.decode(APIResponse.self, from: data)
+            let dataDTO = response.data
+            
+            print("✅ JSON 디코딩 완료")
+            print("   - Status: \(response.status)")
+            print("   - 영화 수: \(dataDTO.movies.count)")
+            
+            try await mergeOnlyTargetMovies(from: dataDTO)
+
+        } catch let DecodingError.keyNotFound(key, context) {
+            print("❌ 디코딩 에러 - 키를 찾을 수 없음: \(key.stringValue)")
+            print("   경로: \(context.codingPath)")
+            print("   설명: \(context.debugDescription)")
+            errorMessage = "JSON 형식 오류: \(key.stringValue) 키가 없습니다."
+        } catch let DecodingError.typeMismatch(type, context) {
+            print("❌ 디코딩 에러 - 타입 불일치: \(type)")
+            print("   경로: \(context.codingPath)")
+            print("   설명: \(context.debugDescription)")
+            errorMessage = "JSON 형식 오류: 타입이 맞지 않습니다."
+        } catch {
+            print("❌ Showtimes load/decode error:", error)
+            errorMessage = "상영정보 로드에 실패했어요. (\(error.localizedDescription))"
+        }
+    }
+
+    @MainActor
+    private func mergeOnlyTargetMovies(from dataDTO: ShowtimesDataDTO) async throws {
+
+        var existingTheaterByKey: [String: TheaterModel] = [:]
+        for th in theaters {
+            let key = "\(th.region ?? "")|\(th.name)"
+            existingTheaterByKey[key] = th
+        }
+
+        var byMovie = Dictionary(grouping: screenings, by: { $0.movieId })
+        
+        var totalNewTheaters = 0
+        var totalNewScreenings = 0
+
+        for movieDTO in dataDTO.movies {
+            guard let idx = indexOfLocalMovie(for: movieDTO, in: movies) else {
+                print("⚠️ 로컬에 없는 영화 스킵: \(movieDTO.title)")
+                continue
+            }
+            
+            let movieId = movies[idx].id
+            movies[idx].serverId = movieDTO.id
+            
+            print("✅ 영화 매칭: \(movieDTO.title) → \(movies[idx].name)")
+
+            var newTheaters: [TheaterModel] = []
+            var newScreenings: [ScreeningModel] = []
+
+            for schedule in movieDTO.schedules {
+                print("   📅 날짜: \(schedule.date)")
+                
+                for area in schedule.areas {
+                    print("      📍 지역: \(area.area)")
+                    
+                    for item in area.items {
+                        let key = "\(area.area)|\(item.auditorium)"
+                        let theater: TheaterModel = {
+                            if let existed = existingTheaterByKey[key] {
+                                return existed
+                            } else {
+                                let th = TheaterMapper.toDomain(from: area, item: item)
+                                existingTheaterByKey[key] = th
+                                newTheaters.append(th)
+                                print("         🏛️ 새 극장: \(th.name)")
+                                return th
+                            }
+                        }()
+
+                        for st in item.showtimes {
+                            if let sc = ScreeningMapper.toDomain(
+                                from: st,
+                                item: item,
+                                movieId: movieId,
+                                theaterId: theater.id,
+                                date: schedule.date
+                            ) {
+                                newScreenings.append(sc)
+                            } else {
+                                print("         ⚠️ 상영 정보 파싱 실패: \(st.start) - \(st.end)")
+                            }
+                        }
+                    }
+                }
+            }
+
+            var mergedTheaterById = Dictionary(uniqueKeysWithValues: theaters.map { ($0.id, $0) })
+            for th in newTheaters { mergedTheaterById[th.id] = th }
+            let mergedTheaters = Array(mergedTheaterById.values).sorted { $0.name < $1.name }
+
+            byMovie[movieId] = newScreenings
+
+            theaters = mergedTheaters
+            screenings = byMovie.values.flatMap { $0 }
+            
+            totalNewTheaters += newTheaters.count
+            totalNewScreenings += newScreenings.count
+            
+            print("   ✅ 이 영화 - 극장: \(newTheaters.count)개, 상영: \(newScreenings.count)개")
         }
         
-        let calendar = Calendar.current
-        let 오늘 = Date()
-        
-        func 시간만들기(일수: Int, 시: Int, 분: Int) -> Date {
-            let 날짜 = calendar.date(byAdding: .day, value: 일수, to: 오늘)!
-            return calendar.date(bySettingHour: 시, minute: 분, second: 0, of: 날짜)!
-        }
-        
-        return [
-            // 오늘
-            ScreeningModel(movieId: 귀멸.id, theaterId: 극장1.id, info: "2D",
-                          startAt: 시간만들기(일수: 0, 시: 10, 분: 30),
-                          endAt: 시간만들기(일수: 0, 시: 12, 분: 40),
-                          seatsTotal: 150, seatsAvailable: 72),
-            ScreeningModel(movieId: 귀멸.id, theaterId: 극장1.id, info: "2D",
-                          startAt: 시간만들기(일수: 0, 시: 15, 분: 10),
-                          endAt: 시간만들기(일수: 0, 시: 17, 분: 20),
-                          seatsTotal: 150, seatsAvailable: 28),
-            ScreeningModel(movieId: 귀멸.id, theaterId: 극장2.id, info: "IMAX",
-                          startAt: 시간만들기(일수: 0, 시: 13, 분: 0),
-                          endAt: 시간만들기(일수: 0, 시: 15, 분: 10),
-                          seatsTotal: 200, seatsAvailable: 150),
-            ScreeningModel(movieId: 모노노케.id, theaterId: 극장1.id, info: "2D",
-                          startAt: 시간만들기(일수: 0, 시: 19, 분: 0),
-                          endAt: 시간만들기(일수: 0, 시: 21, 분: 30),
-                          seatsTotal: 150, seatsAvailable: 130),
-            // 내일
-            ScreeningModel(movieId: 귀멸.id, theaterId: 극장2.id, info: "2D",
-                          startAt: 시간만들기(일수: 1, 시: 11, 분: 0),
-                          endAt: 시간만들기(일수: 1, 시: 13, 분: 10),
-                          seatsTotal: 120, seatsAvailable: 5),
-            ScreeningModel(movieId: f1.id, theaterId: 극장3.id, info: "IMAX",
-                          startAt: 시간만들기(일수: 1, 시: 16, 분: 50),
-                          endAt: 시간만들기(일수: 1, 시: 19, 분: 0),
-                          seatsTotal: 120, seatsAvailable: 94),
-        ]
+        print("\n🎬 최종 데이터:")
+        print("   - 전체 극장: \(theaters.count)개")
+        print("   - 전체 상영: \(screenings.count)개")
+        print("   - 지역: \(regions)")
+        print("   - 새로 추가된 극장: \(totalNewTheaters)개")
+        print("   - 새로 추가된 상영: \(totalNewScreenings)개")
+    }
+
+    private func normalize(_ s: String) -> String {
+        s.lowercased()
+         .replacingOccurrences(of: " ", with: "")
+         .replacingOccurrences(of: ":", with: "")
+         .replacingOccurrences(of: "[^a-z0-9가-힣]", with: "", options: .regularExpression)
+    }
+
+    private func indexOfLocalMovie(for dto: MovieDTO, in local: [MovieModel]) -> Int? {
+        if let i = local.firstIndex(where: { $0.serverId == dto.id }) { return i }
+        let target = normalize(dto.title)
+        return local.firstIndex(where: { normalize($0.name) == target })
     }
 }
