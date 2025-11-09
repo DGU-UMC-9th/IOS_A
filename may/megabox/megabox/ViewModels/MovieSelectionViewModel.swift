@@ -18,10 +18,13 @@ final class MovieSelectionViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
     init() {
+        setupSearchBinding()
         loadMovies()
-        
+    }
+    
+    private func setupSearchBinding() {
         $searchText
-            .debounce(for: .milliseconds(400), scheduler: DispatchQueue.main)
+            .debounce(for: .milliseconds(300), scheduler: DispatchQueue.main)
             .removeDuplicates()
             .map { [weak self] text in
                 self?.filterMovies(by: text) ?? []
@@ -34,22 +37,45 @@ final class MovieSelectionViewModel: ObservableObject {
     }
     
     private func loadMovies() {
-        // 더미데이터?
-        self.allMovies = [
-            MovieBooking(posterImage: Image(.movie1), title: "어쩔수가없다", ageRating: "15"),
-            MovieBooking(posterImage: Image(.movie2), title: "극장판 귀멸의 칼날: 무한성 편", ageRating: "15"),
-            MovieBooking(posterImage: Image(.movie3), title: "F1: 더 무비", ageRating: "15"),
-            MovieBooking(posterImage: Image(.movie4), title: "얼굴", ageRating: "15"),
-            MovieBooking(posterImage: Image(.movie5), title: "모노노케 히메", ageRating: "ALL"),
-            MovieBooking(posterImage: Image(.movie6), title: "야당", ageRating: "15"),
-            MovieBooking(posterImage: Image(.movie7), title: "보스", ageRating: "15"),
-            MovieBooking(posterImage: Image(.movie8), title: "THE ROSES", ageRating: "15")
-        ]
-        self.filteredMovies = allMovies
+        isLoading = true
+        errorMessage = nil
+        
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            guard let self = self else { return }
+            
+            do {
+                guard let url = Bundle.main.url(forResource: "MovieSchedule", withExtension: "json") else {
+                    throw MovieLoadError.fileNotFound
+                }
+                
+                let data = try Data(contentsOf: url)
+                let decoder = JSONDecoder.movieScheduleDecoder
+                let apiResponse = try decoder.decode(ApiResponse.self, from: data)
+                
+                guard let movieDTOs = apiResponse.data?.movies else {
+                    throw MovieLoadError.emptyData
+                }
+                
+                let domainMovies = movieDTOs.map { $0.toDomain() }
+                
+                DispatchQueue.main.async {
+                    self.allMovies = domainMovies
+                    self.filteredMovies = domainMovies
+                    self.isLoading = false
+                }
+                
+            } catch {
+                DispatchQueue.main.async {
+                    self.errorMessage = "영화 목록을 불러올 수 없습니다."
+                    self.isLoading = false
+                    print("MovieSelectionView 로드 에러: \(error)")
+                }
+            }
+        }
     }
     
     private func filterMovies(by keyword: String) -> [MovieBooking] {
         guard !keyword.isEmpty else { return allMovies }
-        return allMovies.filter { $0.title.contains(keyword) }
+        return allMovies.filter { $0.title.localizedCaseInsensitiveContains(keyword) }
     }
 }

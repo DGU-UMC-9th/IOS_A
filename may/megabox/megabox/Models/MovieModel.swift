@@ -58,8 +58,8 @@ struct MovieFeed: Identifiable {
     var posterImage: Image
 }
 
-struct MovieBooking : Identifiable, Equatable {
-    let id = UUID()
+struct MovieBooking: Identifiable, Equatable {
+    var id : String
     var posterImage: Image
     var title: String
     var ageRating: String

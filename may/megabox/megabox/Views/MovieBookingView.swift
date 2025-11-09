@@ -88,27 +88,55 @@ struct MovieBookingView: View {
                 .presentationDragIndicator(.visible)
             }
             
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
-                    ForEach(viewModel.movieList, id: \.title) { movie in
-                        Button {
-                            viewModel.selectedMovie = movie
-                        } label: {
-                            movie.posterImage
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(height: 89)
-                                .clipShape(RoundedRectangle(cornerRadius: 10))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .stroke(viewModel.selectedMovie?.title == movie.title ? .purple03 : .clear, lineWidth: 3)
-                                        .padding(1)
-                                )
+            // 로딩 표시
+            if viewModel.isLoading {
+                HStack {
+                    ProgressView()
+                    Text("영화 로딩 중...")
+                        .font(.medium14)
+                        .foregroundStyle(.gray05)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 20)
+            }
+            // 에러 표시
+            else if let error = viewModel.errorMessage {
+                Text(error)
+                    .font(.medium14)
+                    .foregroundStyle(.red)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, 16)
+            }
+            // 영화 목록 표시
+            else if !viewModel.movieList.isEmpty {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) {
+                        ForEach(viewModel.movieList) { movie in
+                            Button {
+                                viewModel.selectedMovie = movie
+                                print("선택된 영화: \(movie.title)")
+                            } label: {
+                                movie.posterImage
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(height: 89)
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .stroke(
+                                                viewModel.selectedMovie?.id == movie.id
+                                                ? .purple03
+                                                : .clear,
+                                                lineWidth: 3
+                                            )
+                                            .padding(1)
+                                    )
+                            }
                         }
                     }
                 }
+                .padding(.horizontal, 16)
             }
-            .padding(.horizontal, 16)
         }
         .padding(.top, 16)
     }
