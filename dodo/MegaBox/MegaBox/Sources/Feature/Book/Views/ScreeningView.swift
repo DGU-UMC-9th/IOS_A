@@ -32,7 +32,7 @@ struct TheaterSection: View {
         VStack(alignment: .leading, spacing: 12) {
             TheaterHeader(name: theater.theaterName, screenType: theater.screenType)
             
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 4)) {
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 4), spacing: 8) {
                 ForEach(theater.times) { screening in
                     ScreeningTimeCard(screening: screening)
                 }
@@ -62,8 +62,9 @@ struct ScreeningTimeCard: View {
     var body: some View {
         NavigationLink {
             // 좌석 선택 화면으로 이동
+            Text("좌석 선택")
         } label: {
-            VStack {
+            VStack(spacing: 4) {
                 Text(screening.startTime)
                     .font(.bold18)
                 
@@ -76,7 +77,8 @@ struct ScreeningTimeCard: View {
             }
             .foregroundStyle(.black)
             .frame(maxHeight: 60)
-            .padding(.vertical)
+            .padding(.vertical, 8)
+            .padding(.horizontal, 4)
             .background(
                 RoundedRectangle(cornerRadius: 8)
                     .stroke(.gray02)
@@ -104,6 +106,7 @@ struct SeatInfo: View {
 #Preview {
     ScreeningView(screening:
         ScreeningSchedule(
+            date: "2025-09-22",
             branch: "강남",
             theaters: [
                 Theaters(
@@ -121,7 +124,7 @@ struct SeatInfo: View {
                     theaterName: "BTS관 (7층 1관 [Laser])",
                     screenType: "2D",
                     times: [
-                        Screening(startTime: "9:30", endTime: "11:50", availableSeats: 75, totalSeats: 116),
+                        Screening(startTime: "09:30", endTime: "11:50", availableSeats: 75, totalSeats: 116),
                         Screening(startTime: "12:00", endTime: "14:26", availableSeats: 102, totalSeats: 116),
                         Screening(startTime: "14:45", endTime: "17:04", availableSeats: 88, totalSeats: 116)
                     ]

@@ -33,10 +33,27 @@ class BookingViewModel: ObservableObject {
     
     private var bag = Set<AnyCancellable>()
     
+    // 영화 목록
+    @Published var movies: [Movie] = []
+    
+    // 포스터 이미지 매핑
+    private let posterImages: [String: Image] = [
+        "어쩔수가없다": Image(.poster1),
+        "귀멸의 칼날: 무한성": Image(.poster2),
+        "F1 더 무비": Image(.poster3),
+        "얼굴": Image(.poster4),
+        "모모노키 히메": Image(.poster5),
+        "보스": Image(.poster6),
+        "야당": Image(.poster7),
+        "The Roses": Image(.poster8),
+    ]
+    
     // MARK: - Init
     init() {
-        results = movieList
         setupBindings()
+        Task {
+            await fetchMovieSchedule()
+        }
     }
     
     private func setupBindings() {
@@ -52,12 +69,12 @@ class BookingViewModel: ObservableObject {
             .dropFirst()
             .debounce(for: .milliseconds(Constants.searchDebounceInterval), scheduler: DispatchQueue.main)
             .removeDuplicates()
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) } // 공백 제거
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
             .handleEvents(receiveOutput: { [weak self] _ in
                 self?.errorMessage = nil
                 self?.isLoading = true
             })
-            .flatMap { [weak self] query -> AnyPublisher<[Movie], Error> in //이중 래핑 방지 Publisher<Future<[Movie], Error>, Never> -> Publisher<[Movie], Error>
+            .flatMap { [weak self] query -> AnyPublisher<[Movie], Error> in
                 guard let self = self else {
                     return Just([]).setFailureType(to: Error.self).eraseToAnyPublisher()
                 }
@@ -99,19 +116,25 @@ class BookingViewModel: ObservableObject {
     }
     
     private func filterSchedules(movie: Movie?, theaters: Set<Theater>, date: Date) -> [ScreeningSchedule] {
-        guard movie != nil,
-              !theaters.isEmpty,
-              Calendar.current.isDateInToday(date) else {
+        guard let movie = movie,
+              !theaters.isEmpty else {
             return []
         }
         
+        // 날짜 포맷터
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let dateString = dateFormatter.string(from: date)
+        
         let theaterTitles = Set(theaters.map { $0.title })
-        return screeningSchedules.filter { schedule in
-            theaterTitles.contains(schedule.branch)
+        
+        // 선택된 영화의 스케줄에서 필터링
+        return movie.schedules.filter { schedule in
+            schedule.date == dateString && theaterTitles.contains(schedule.branch)
         }
     }
     
-    // MARK: - Reset Logic
+    // MARK: - Reset
     private func setupResetLogic() {
         $selectedMovie
             .dropFirst()
@@ -122,7 +145,7 @@ class BookingViewModel: ObservableObject {
             .store(in: &bag)
     }
     
-    // MARK: - Search Logic
+    // MARK: - Search
     private func search(query: String) -> AnyPublisher<[Movie], Error> {
         return Future<[Movie], Error> { [weak self] promise in
             guard let self = self else {
@@ -136,8 +159,8 @@ class BookingViewModel: ObservableObject {
             
             DispatchQueue.global().asyncAfter(deadline: .now() + delay) {
                 let filtered = query.isEmpty
-                ? self.movieList
-                : self.movieList.filter {
+                ? self.movies
+                : self.movies.filter {
                     $0.title.localizedCaseInsensitiveContains(query)
                 }
                 promise(.success(filtered))
@@ -146,70 +169,61 @@ class BookingViewModel: ObservableObject {
         .eraseToAnyPublisher()
     }
     
-    private func handleSearchError(_ error: Error) {
-        errorMessage = "검색 중 오류가 발생했습니다"
-        results = movieList // 전체 목록 유지
-        isLoading = false
+    // MARK: - Fetch Movie Schedule
+    func fetchMovieSchedule() async {
+        await MainActor.run {
+            isLoading = true
+            errorMessage = nil
+        }
+        
+        guard let url = Bundle.main.url(
+            forResource: "MovieSchedule", withExtension: "json") else {
+            await MainActor.run {
+                self.errorMessage = "영화 스케줄 파일을 찾을 수 없습니다."
+                self.isLoading = false
+            }
+            return
+        }
+        
+        guard let data = try? Data(contentsOf: url) else {
+            await MainActor.run {
+                self.errorMessage = "영화 스케줄 파일을 읽을 수 없습니다."
+                self.isLoading = false
+            }
+            return
+        }
+        
+        do {
+            let response = try JSONDecoder().decode(BookingResponse.self, from: data)
+            
+            guard let moviesDTO = response.data?.movies else {
+                await MainActor.run {
+                    isLoading = false
+                }
+                return
+            }
+            
+            await MainActor.run {
+                // 영화 목록 매핑 및 포스터 이미지 추가
+                self.movies = moviesDTO.map { dto in
+                    var movie = MovieDTOMapper.toDomain(from: dto)
+                    movie.posterImage = posterImages[dto.title]
+                    return movie
+                }
+                self.results = self.movies
+                self.isLoading = false
+            }
+        } catch {
+            print("Decoding error:", error)
+            await MainActor.run {
+                self.isLoading = false
+            }
+        }
     }
     
-    var movieList: [Movie] = [
-        Movie(posterImage: Image(.poster1), title: "어쩔수가없다", ageRating: 15),
-        Movie(posterImage: Image(.poster2), title: "귀멸의칼날:무한성편", ageRating: 15),
-        Movie(posterImage: Image(.poster3), title: "F1:더 무비", ageRating: 12),
-        Movie(posterImage: Image(.poster4), title: "얼굴", ageRating: 15),
-        Movie(posterImage: Image(.poster5), title: "모모노키 히메", ageRating: 7),
-        Movie(posterImage: Image(.poster6), title: "보스", ageRating: 12),
-        Movie(posterImage: Image(.poster7), title: "야당", ageRating: 12),
-        Movie(posterImage: Image(.poster8), title: "The Roses", ageRating: 12),
-    ]
-    
-    var screeningSchedules: [ScreeningSchedule] = [
-        ScreeningSchedule(
-            branch: "강남",
-            theaters: [
-                Theaters(
-                    theaterName: "크리클라이너 1관",
-                    screenType: "2D",
-                    times: [
-                        Screening(startTime: "11:30", endTime: "13:58", availableSeats: 109, totalSeats: 116),
-                        Screening(startTime: "14:20", endTime: "16:48", availableSeats: 19, totalSeats: 116),
-                        Screening(startTime: "17:05", endTime: "19:28", availableSeats: 1, totalSeats: 116),
-                        Screening(startTime: "19:45", endTime: "22:02", availableSeats: 100, totalSeats: 116),
-                        Screening(startTime: "22:20", endTime: "00:04", availableSeats: 116, totalSeats: 116)
-                    ]
-                ),
-                Theaters(
-                    theaterName: "크리클라이너 2관",
-                    screenType: "2D",
-                    times: [
-                        Screening(startTime: "9:30", endTime: "11:50", availableSeats: 75, totalSeats: 116),
-                        Screening(startTime: "12:00", endTime: "14:26", availableSeats: 102, totalSeats: 116),
-                        Screening(startTime: "14:45", endTime: "17:04", availableSeats: 88, totalSeats: 116)
-                    ]
-                )
-            ]
-        ),
-        ScreeningSchedule(
-            branch: "홍대",
-            theaters: [
-                Theaters(
-                    theaterName: "BTS관 (7층 1관 [Laser])",
-                    screenType: "2D",
-                    times: [
-                        Screening(startTime: "11:30", endTime: "13:58", availableSeats: 109, totalSeats: 116),
-                        Screening(startTime: "22:20", endTime: "00:04", availableSeats: 116, totalSeats: 116)
-                    ]
-                ),
-                Theaters(
-                    theaterName: "BTS관 (9층 2관 [Laser])",
-                    screenType: "2D",
-                    times: [
-                        Screening(startTime: "9:30", endTime: "11:50", availableSeats: 75, totalSeats: 116),
-                        Screening(startTime: "14:45", endTime: "17:04", availableSeats: 88, totalSeats: 116)
-                    ]
-                )
-            ]
-        )
-    ]
-    
+    // MARK: - Error Handling
+    private func handleSearchError(_ error: Error) {
+        errorMessage = "검색 중 오류가 발생했습니다."
+        isLoading = false
+    }
 }
