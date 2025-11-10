@@ -110,6 +110,7 @@ struct LoginView: View {
             
             Button (action: {
                 print("카카오 로그인")
+                model.kakaoLogin()
             }, label: {
                 Image(.kakao)
             })

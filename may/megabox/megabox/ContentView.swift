@@ -8,12 +8,13 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var model = LoginViewModel()
+    @StateObject private var model = LoginViewModel()
     
     var body: some View {
         NavigationStack {
             if model.isLogined {
                 TabSectionView()
+                    .environmentObject(model)
                     .transition(.opacity)
             } else {
                 LoginView(model: model)

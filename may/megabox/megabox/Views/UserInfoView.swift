@@ -9,6 +9,7 @@ import SwiftUI
 
 struct UserInfoView: View {
     @AppStorage("username") private var username: String = "사용자"
+    @EnvironmentObject var model: LoginViewModel
     
     var body: some View {
         VStack{
@@ -39,6 +40,7 @@ struct UserInfoView: View {
                 Spacer()
                 NavigationLink {
                     UserInfoManageView()
+                        .environmentObject(model)
                     } label: {
                     Text("회원정보")
                         .font(.semiBold14)
@@ -204,5 +206,6 @@ struct UserInfoView: View {
 #Preview {
     NavigationStack {
         UserInfoView()
+            .environmentObject(LoginViewModel())
     }
 }
