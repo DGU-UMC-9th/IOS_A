@@ -54,7 +54,7 @@ struct TicketTab : View {
     
     var body: some View {
         NavigationStack(path: $path) {
-            HomeView(path: $path)
+            ReserveView(path: $path)
         }
     }
 }

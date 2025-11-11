@@ -7,11 +7,12 @@
 
 import Foundation
 
-struct Movie : Identifiable, Hashable  {
+struct MovieModel : Identifiable, Hashable  {
     let id = UUID()
     var name: String
     var imageName: String
     var audience : String
+    var age : Int
     
 }
 

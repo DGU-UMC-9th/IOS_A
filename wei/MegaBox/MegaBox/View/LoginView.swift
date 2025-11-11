@@ -76,8 +76,7 @@ struct LoginView: View {
     private var ButtonSection: some View {
         VStack(spacing: 17) {
             Button {
-                    self.id = idInput
-                    self.password = passwordInput
+                viewModel.login(id:idInput, password: passwordInput)
                     isLoggedIn = true
                 } label: {
                     RoundedRectangle(cornerRadius: 10)
