@@ -10,9 +10,9 @@ import Observation // @Observable, @Bindable 사용하기 위해
 
 struct LoginView: View {
     @Binding var viewModel: LoginViewModel
-    @AppStorage("id") var id: String = ""
-    @AppStorage("pw") var pw: String = ""
     @AppStorage("userName") var userName = ""
+    
+    private let keychain = KeychainService.shared
     
     var body: some View {
         VStack {
@@ -66,11 +66,10 @@ struct LoginView: View {
         
         return VStack(spacing: 17) {
             Button(action: {
-                id = viewModel.loginModel.id
-                pw = viewModel.loginModel.pw
+                // Appstorage에 저장
                 userName = "송민교"
-                
-                viewModel.loginConfirm(storedID: id, storedPW: pw)
+                // 로그인
+                viewModel.login(storedID: viewModel.loginModel.id, storedPW: viewModel.loginModel.pw)
             }) {
                 Text("로그인")
                     .font(.pretend(type: .bold, size: 18))
@@ -90,7 +89,11 @@ struct LoginView: View {
         HStack(alignment: .top) {
             Image("naver")
             Spacer()
-            Image("kakao")
+            Button {
+                viewModel.kakaoLogin()
+            } label:{
+                Image("kakao")
+            }
             Spacer()
             Image("apple")
         }

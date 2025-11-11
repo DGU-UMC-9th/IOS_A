@@ -50,7 +50,8 @@ struct TotalMovieSheet: View{
                     Image(systemName: "xmark")
                         .foregroundStyle(Color.black)
                 }
-                .frame(width: 16, height: .infinity)
+                .frame(width: 16)
+                .frame(maxHeight: .infinity, alignment: .center)
                 .padding()
                 .clipShape(Capsule())
                 .glassEffect()
