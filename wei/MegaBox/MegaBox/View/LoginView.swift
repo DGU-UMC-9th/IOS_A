@@ -6,6 +6,7 @@ import Observation
 struct LoginView: View {
     
     @State var viewModel: LoginViewModel
+    @StateObject private var kakaoManager = KakaoLoginManager.shared
     
     @AppStorage("id") private var id: String = ""
     @AppStorage("password") private var password: String = ""
@@ -13,11 +14,12 @@ struct LoginView: View {
     
     @State private var idInput: String = ""
     @State private var passwordInput: String = ""
+    @State private var showAlert: Bool = false
     
     
     var body: some View {
         if viewModel.isLoggedIn {
-                    MainTabView()
+                    MainTabView(viewModel: viewModel )
                 }
         else{
             NavigationStack{
@@ -99,52 +101,60 @@ struct LoginView: View {
     }
     
     private var socialLoginSection: some View {
-        HStack(spacing: 70) {
-            Button {
-            } label: {
-                Image(.loginBtn1)
-            }
-            
-            Button {
-            } label: {
-                Image(.loginBtn2)
-            }
-            
-            Button {
-            } label: {
-                Image(.loginBtn3)
+            HStack(spacing: 70) {
+                // 카카오 로그인 버튼
+                Button {
+                    handleKakaoLogin()
+                } label: {
+                    Image(.loginBtn1) // 카카오 로그인 이미지
+                }
+                
+                Button {
+                    // 네이버 로그인
+                } label: {
+                    Image(.loginBtn2)
+                }
+                
+                Button {
+                    // 구글 로그인
+                } label: {
+                    Image(.loginBtn3)
+                }
             }
         }
-    }
     
     private var bannerSection: some View {
         Image(.umc1)
             .resizable()
             .aspectRatio(contentMode: .fill)
     }
-}
-
-
-
-
-enum PREVIEW_DEVICE_TYPE : String, CaseIterable {
-    case iPhone_16_Pro = "iPhone 16 Pro"
-    case iPhone_11 = "iPhone 11"
     
-    var previewDevice: PreviewDevice {
-        .init(rawValue: self.rawValue)
-    }
+    private func handleKakaoLogin() {
+            guard let window = UIApplication.shared.connectedScenes
+                .compactMap({ $0 as? UIWindowScene })
+                .flatMap({ $0.windows })
+                .first(where: { $0.isKeyWindow }) else {
+                return
+            }
+            
+            kakaoManager.loginWithKakao(
+                presentationAnchor: window,
+                onSuccess: { accessToken, refreshToken, userInfo in
+                    viewModel.loginWithKakao(
+                        accessToken: accessToken,
+                        refreshToken: refreshToken,
+                        userInfo: userInfo
+                    )
+                },
+                onFailure: { error in
+                    viewModel.errorMessage = "카카오 로그인에 실패했습니다."
+                    showAlert = true
+                }
+            )
+        }
 }
 
-func devicePreviews<Content: View>(
-    content: @escaping () -> Content
-) -> some View {
-    ForEach(PREVIEW_DEVICE_TYPE.allCases, id: \.self) { device in
-        content()
-            .previewDevice(device.previewDevice)
-            .previewDisplayName(device.rawValue)
-    }
-}
+
 
 
 #Preview {

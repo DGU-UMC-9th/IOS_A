@@ -10,6 +10,8 @@ import SwiftUI
 
 
 struct MainTabView: View {
+    @State var viewModel: LoginViewModel
+    
     var body: some View {
         TabView {
             HomeTab()
@@ -21,7 +23,7 @@ struct MainTabView: View {
             OrderTab()
                 .tabItem { Label("모바일 오더", systemImage: "popcorn") }
             
-            InfoTab()
+            InfoTab(viewModel: viewModel)
                 .tabItem { Label("마이 페이지", systemImage: "person") }
             
             
@@ -39,12 +41,13 @@ struct HomeTab: View {
     }
 }
 
-struct InfoTab : View {
+struct InfoTab: View {
+    @State var viewModel: LoginViewModel
     @State private var path = NavigationPath()
     
     var body: some View {
         NavigationStack(path: $path) {
-            InfoView(path: $path)
+            InfoView(viewModel: viewModel, path: $path)
         }
     }
 }
@@ -69,7 +72,7 @@ struct OrderTab : View {
     }
 }
 
-
-#Preview {
-    MainTabView()
-}
+//
+//#Preview {
+//    MainTabView()
+//}
