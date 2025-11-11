@@ -11,9 +11,21 @@ import AuthenticationServices
 
 class KakaoLoginManager: NSObject, ObservableObject {
     static let shared = KakaoLoginManager()
+    private var authSession: ASWebAuthenticationSession?
     
-    private let clientId = "YOUR_KAKAO_APP_KEY"
-    private let redirectUri = "YOUR_REDIRECT_URI" // 예: "kakaoYOUR_APP_KEY://oauth"
+    private let clientId: String = {
+            guard let key = Bundle.main.object(forInfoDictionaryKey: "KAKAO_APP_KEY") as? String else {
+                fatalError("KAKAO_APP_KEY not found in Info.plist")
+            }
+            return key
+        }()
+        
+        private let redirectUri: String = {
+            guard let uri = Bundle.main.object(forInfoDictionaryKey: "YOUR_REDIRECT_URI") as? String else {
+                fatalError("YOUR_REDIRECT_URI not found in Info.plist")
+            }
+            return uri
+        }()
     
     @Published var isLoading = false
     @Published var errorMessage: String?
@@ -50,6 +62,8 @@ class KakaoLoginManager: NSObject, ObservableObject {
         components.queryItems = params.map { URLQueryItem(name: $0.key, value: $0.value) }
         
         guard let url = components.url else { return }
+        print("인가 코드 요청 URL: \(url.absoluteString)")
+        
         
         // ASWebAuthenticationSession을 사용하여 OAuth 진행
         let session = ASWebAuthenticationSession(
@@ -59,18 +73,29 @@ class KakaoLoginManager: NSObject, ObservableObject {
             guard let self = self else { return }
             
             if let error = error {
+                print("인가 코드 요청 실패: \(error.localizedDescription)")
                 self.handleError(error)
                 return
             }
             
-            guard let callbackURL = callbackURL,
-                  let code = URLComponents(string: callbackURL.absoluteString)?
-                    .queryItems?
-                    .first(where: { $0.name == "code" })?
-                    .value else {
-                self.handleError(NSError(domain: "KakaoLogin", code: -1, userInfo: [NSLocalizedDescriptionKey: "인가 코드를 받지 못했습니다."]))
-                return
-            }
+            guard let callbackURL = callbackURL else {
+                            print("Callback URL이 없습니다")
+                            self.handleError(NSError(domain: "KakaoLogin", code: -1, userInfo: [NSLocalizedDescriptionKey: "Callback URL이 없습니다."]))
+                            return
+                        }
+                        
+                        print("Callback URL 받음: \(callbackURL.absoluteString)")
+            
+            guard let code = URLComponents(string: callbackURL.absoluteString)?
+                                .queryItems?
+                                .first(where: { $0.name == "code" })?
+                                .value else {
+                            print("인가 코드를 찾을 수 없습니다")
+                            self.handleError(NSError(domain: "KakaoLogin", code: -1, userInfo: [NSLocalizedDescriptionKey: "인가 코드를 받지 못했습니다."]))
+                            return
+                        }
+                        
+                        print("인가 코드 받음: \(code)")
             
             // 2단계: 토큰 받기
             self.requestAccessToken(code: code)
@@ -78,6 +103,8 @@ class KakaoLoginManager: NSObject, ObservableObject {
         
         session.presentationContextProvider = self
         session.prefersEphemeralWebBrowserSession = true
+        
+        self.authSession = session 
         session.start()
     }
     
@@ -105,6 +132,9 @@ class KakaoLoginManager: NSObject, ObservableObject {
             switch response.result {
             case .success(let tokenResponse):
                 // 3단계: 사용자 정보 요청
+                print("액세스 토큰 받음")
+                print("   Token Type: \(tokenResponse.token_type)")
+                print("   Expires In: \(tokenResponse.expires_in)초")
                 self.requestUserInfo(accessToken: tokenResponse.access_token, refreshToken: tokenResponse.refresh_token)
                 
             case .failure(let error):
@@ -139,11 +169,16 @@ class KakaoLoginManager: NSObject, ObservableObject {
                     profileImage: userResponse.properties?.profile_image,
                     email: userResponse.kakao_account?.email
                 )
+                print(" 카카오 사용자 정보 받음:")
+                print("   ID: \(userInfo.id)")
+                print("   닉네임: \(userInfo.nickname ?? "없음")")
+                print("   이메일: \(userInfo.email ?? "없음")")
                 
                 self.onSuccess?(accessToken, refreshToken, userInfo)
-                print("✅ 카카오 사용자 정보: \(userInfo)")
+                print("카카오 사용자 정보: \(userInfo)")
                 
             case .failure(let error):
+                print("사용자 정보 요청 실패: \(error.localizedDescription)")
                 self.handleError(error)
             }
         }
@@ -154,7 +189,7 @@ class KakaoLoginManager: NSObject, ObservableObject {
         isLoading = false
         errorMessage = error.localizedDescription
         onFailure?(error)
-        print("❌ 카카오 로그인 에러: \(error)")
+        print("카카오 로그인 에러: \(error)")
     }
 }
 

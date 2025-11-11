@@ -104,6 +104,7 @@ struct LoginView: View {
             HStack(spacing: 70) {
                 // 카카오 로그인 버튼
                 Button {
+                    print("🟡 Kakao button tapped")
                     handleKakaoLogin()
                 } label: {
                     Image(.loginBtn1) // 카카오 로그인 이미지
