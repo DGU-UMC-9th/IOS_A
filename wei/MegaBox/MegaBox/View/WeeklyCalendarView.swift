@@ -19,10 +19,15 @@ struct WeekCalendarView: View {
                 
                 VStack(spacing: 4) {
                     // 월.일 표시
-                    Text(monthDayString(from: date))
-                        .font(.bold18)
-                        .foregroundStyle(isSelected ? Color.white : textColor(for: date))
-                
+                    if index == 0 {
+                        Text(monthDayString(from: date))
+                            .font(.bold18)
+                            .foregroundStyle(isSelected ? Color.white : textColor(for: date))
+                    } else {
+                        Text(dayString(from: date))
+                            .font(.bold18)
+                            .foregroundStyle(isSelected ? Color.white : textColor(for: date))
+                    }
                     // 오늘/내일/요일 표시
                     Text(dayLabel(for: index))
                         .font(.semiBold14)
@@ -44,7 +49,6 @@ struct WeekCalendarView: View {
                 }
             }
         }
-        .padding(.horizontal, 20)
     }
     
     // 오늘부터 7일치 날짜 가져오기
@@ -72,6 +76,12 @@ struct WeekCalendarView: View {
     private func monthDayString(from date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "M.d"
+        return formatter.string(from: date)
+    }
+    
+    private func dayString(from date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "d"
         return formatter.string(from: date)
     }
     
@@ -103,6 +113,6 @@ struct WeekCalendarView: View {
     
 }
 
-//#Preview {
-//    WeekCalendarView(viewModel: CalendarViewModel(), )
-//}
+#Preview {
+    WeekCalendarView(viewModel: CalendarViewModel(), reserveVM: ReserveViewModel())
+}

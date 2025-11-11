@@ -18,12 +18,11 @@ struct ReserveView: View {
     @State private var showingSheet: Bool = false
     
     var body: some View {
-        VStack(alignment:.leading, spacing: 20){
+        VStack(spacing: 20) {
             Navigation
             MovieSelection
             TheaterSelection
             WeekCalendarView(viewModel: calendarVM, reserveVM: vm)
-                .padding(.horizontal,24)
             ScreenSelection
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             
@@ -117,28 +116,30 @@ struct ReserveView: View {
     }
     
     private var TheaterSelection : some View {
-        HStack{
-            ForEach(vm.regions, id: \.self) { region in
-                let isOn = vm.isRegionSelected(region)
-                
-                Button {
-                    vm.toggleRegion(region)
-                } label: {
-                    Text(region)
-                        .font(.semiBold16)
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 8)
-                        .frame(minHeight: 36)
-                        .background(
-                            RoundedRectangle(cornerRadius: 12)
-                                .fill(isOn ? Color.purple03 : Color.gray01)
-                        )
-                        .foregroundStyle(isOn ? Color.white : Color.gray05)
+        ScrollView(.horizontal) {
+            HStack{
+                ForEach(vm.regions, id: \.self) { region in
+                    let isOn = vm.isRegionSelected(region)
+                    
+                    Button {
+                        vm.toggleRegion(region)
+                    } label: {
+                        Text(region)
+                            .font(.semiBold16)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 8)
+                            .frame(minHeight: 36)
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(isOn ? Color.purple03 : Color.gray01)
+                            )
+                            .foregroundStyle(isOn ? Color.white : Color.gray05)
+                    }
+                    
                 }
-                
             }
+            .padding(.horizontal,24)
         }
-        .padding(.horizontal,24)
     }
     
     private var ScreenSelection: some View {
