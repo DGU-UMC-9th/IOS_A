@@ -11,6 +11,17 @@ struct MainTabView: View {
     @State private var viewModel = MovieViewModel()
     @Environment(NavigationRouterViewModel.self) private var router
 
+    @StateObject private var movieSelectVM: MovieSelectViewModel
+    @StateObject private var calendarVM: CalendarViewModel
+    @StateObject private var theaterInfoVM: TheaterInfoViewModel
+
+    init() {
+        let m = MovieSelectViewModel()
+        _movieSelectVM = StateObject(wrappedValue: m)
+        _calendarVM = StateObject(wrappedValue: CalendarViewModel())
+        _theaterInfoVM = StateObject(wrappedValue: TheaterInfoViewModel(movieVM: m))
+    }
+
     var body: some View {
         @Bindable var router = router
         NavigationStack(path: $router.path){
@@ -22,7 +33,9 @@ struct MainTabView: View {
 
                 // 바로 예매 탭
                 Tab("바로예매", systemImage: "ticket"){
-                    ReservationView()
+                    ReservationView(movieViewModel: movieSelectVM,
+                                    calendarViewModel: calendarVM,
+                                    theaterInfoViewModel: theaterInfoVM)
                 }
 
                 // 모바일오더 탭

@@ -83,13 +83,14 @@ struct HomeView: View {
             }
             .padding(.vertical, 10)
             
-            ScrollView(.horizontal, showsIndicators: false) {
+            ScrollView(.horizontal) {
                 LazyHStack(spacing: 24) {
                     ForEach(currentMovieList) { movie in
                         MovieCard(movie: movie)
                     }
                 }
             }
+            .scrollIndicators(.hidden)
         }
     }
     
