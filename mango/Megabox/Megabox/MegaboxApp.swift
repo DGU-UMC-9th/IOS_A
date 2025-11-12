@@ -6,12 +6,15 @@
 //
 
 import SwiftUI
+import KakaoSDKAuth
+import KakaoSDKUser
+import KakaoSDKCommon
 
 @main
 struct MegaboxApp: App {
     init(){
         // 앱 실행 시 SDK 초기화
-        KakaoSDK.initSDK(appKey: AppConf)
+        KakaoSDK.initSDK(appKey: AppConfig.nativeAppKey)
     }
     @State private var router = NavigationRouterViewModel()
     var body: some Scene {
