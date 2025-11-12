@@ -75,7 +75,7 @@ struct ReservationView: View {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "ko_KR")
         formatter.timeZone = TimeZone.current
-        formatter.dateFormat = "MM.dd"
+        formatter.dateFormat = "yyyy-MM-dd"
         let selectedDayString = formatter.string(from: theaterInfoViewModel.selectedDate)
 
         return ScrollView {
