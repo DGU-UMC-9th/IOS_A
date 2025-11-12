@@ -288,6 +288,8 @@
 /* Begin XCBuildConfiguration section */
 		DBA0DC2F2E7D28020001FF88 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = DBA0DC122E7D28000001FF88 /* Megabox */;
+			baseConfigurationReferenceRelativePath = Service/Config.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -351,6 +353,8 @@
 		};
 		DBA0DC302E7D28020001FF88 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = DBA0DC122E7D28000001FF88 /* Megabox */;
+			baseConfigurationReferenceRelativePath = Service/Config.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
