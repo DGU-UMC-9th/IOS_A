@@ -37,12 +37,14 @@ struct LoginView: View {
             VStack {
                 TextField("아이디", text: $vm.userId)
                     .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled() //자동수정 방지
                     .font(.medium16)
                 Divider()
             }
             VStack {
                 SecureField("비밀번호", text: $vm.password)
                     .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
                     .font(.medium16)
                 Divider()
             }
@@ -65,7 +67,7 @@ struct LoginView: View {
             }
             
             NavigationLink {
-                SignUpView()
+                SignUpView(vm: vm)
             } label: {
                 Text("회원가입")
                     .font(.medium13)
@@ -77,19 +79,21 @@ struct LoginView: View {
     private var socialLoginSection: some View {
         HStack(spacing: 52) {
             Button {
-                
+                //TODO: 네이버 로그인 - 구현 필요
+                print("네이버 로그인")
             } label: {
                 Image(.naver)
             }
             
             Button {
-                
+                vm.KakaoLogin()
             } label: {
                 Image(.kakao)
             }
             
             Button {
-                
+                //TODO: 애플 로그인 - 구현 필요
+                print("애플 로그인")
             } label: {
                 Image(.apple)
             }

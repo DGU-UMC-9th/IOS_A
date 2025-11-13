@@ -3,40 +3,50 @@
 //  MegaBox
 //
 //  Created by 김도연 on 10/1/25.
+//  LoginViewModel 공유 사용
 //
 
 import SwiftUI
 
 struct SignUpView: View {
-    @AppStorage("userId") private var userId: String = ""
-    @AppStorage("password") private var password: String = ""
     @Environment(\.dismiss) private var dismiss
+    @Bindable var vm: LoginViewModel
     
-    @State var id: String = ""
-    @State var pw: String = ""
+    @State private var id: String = ""
+    @State private var password: String = ""
     
     var body: some View {
         VStack {
-            TextField("id", text: $id)
+            TextField("아이디", text: $id)
                 .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
             Divider()
-            TextField("password", text: $pw)
+            
+            SecureField("비밀번호", text: $password)
                 .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
             Divider()
             
             Button {
-                userId = self.id
-                password = self.pw
-                dismiss()
+                if vm.signUp(id: id, password: password) {
+                    dismiss()
+                }
             } label: {
                 Text("회원가입")
             }
         }
         .padding(.horizontal)
         .navigationTitle("회원가입")
+        .alert("알림", isPresented: $vm.showAlert) {
+            Button("확인", role: .cancel) { }
+        } message: {
+            Text(vm.alertMessage)
+        }
     }
 }
 
 #Preview {
-    SignUpView()
+    NavigationStack {
+        SignUpView(vm: LoginViewModel())
+    }
 }
