@@ -8,10 +8,13 @@
 import SwiftUI
 
 struct MegaBoxTabView: View {
+    @State private var homeViewModel = HomeViewModel()
+    
     var body: some View {
         TabView {
             Tab("홈", systemImage: "house") {
                 HomeView()
+                    .environment(homeViewModel) // HomeViewModel을 Environment로 전달
             }
             
             Tab("바로 예매", systemImage: "play.laptopcomputer") {
