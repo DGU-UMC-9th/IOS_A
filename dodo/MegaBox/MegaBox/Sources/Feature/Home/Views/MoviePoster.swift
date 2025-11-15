@@ -6,46 +6,51 @@
 //
 
 import SwiftUI
+import NukeUI
 
 struct MoviePoster: View {
+    @Environment(HomeViewModel.self) private var viewModel
     @State var movie: MovieModel
     
     var body: some View {
         VStack(alignment: .leading) {
             NavigationLink {
-                //MARK: - 지금은 그냥 하드코딩 식으로 F1영화만 정보 제대로 가져올 수 있도록 제작. API연동을 한다면 movieID로 요청 보내서 MovieDetail모델에 맞춰 response받아와서 띄워주는 방식.
-                if movie.title == "F1: 더 무비" {
-                    MovieDetailView(
-                        movie:
-                            MovieDetail(
-                                headerImage: Image(.movieDetailHeader),
-                                posterImage: movie.posterImage,
-                                title: movie.title,
-                                engTitle: "F1 : The Movie",
-                                description: "최고가 되지 못한 전설 VS 최고가 되고 싶은 루키 한때 주목받는 유망주였지만 끔찍한 사고로 F1에서  우승하지 못하고 한순간에 추락한 드라이버 ‘손; 헤이스'(브래드 피트). 그의 오랜 동료인 ‘루벤 세르반테스'(하비에르 바르뎀)에게 레이싱 복귀를 제안받으며 최하위 팀인 APGXP에 합류한다.",
-                                ageRating: "12세 이상 관람가",
-                                releaseDate: movie.title
-                            )
-                    )
+                if let movieDetail = viewModel.getMovieDetail(by: movie.id) {
+                    MovieDetailView(movie: movieDetail)
                 } else {
+                    // fallback - 상세 정보를 찾지 못한 경우
                     MovieDetailView(
-                        movie:
-                            MovieDetail(
-                                headerImage: movie.posterImage,
-                                posterImage: movie.posterImage,
-                                title: movie.title,
-                                engTitle: "English Title",
-                                description: "설명 설명",
-                                ageRating: "00세 이상 관람가",
-                                releaseDate: movie.title
-                            )
+                        movie: MovieDetail(
+                            id: movie.id,
+                            headerImage: movie.posterImage,
+                            posterImage: movie.posterImage,
+                            title: movie.title,
+                            engTitle: movie.title,
+                            description: "영화 정보를 불러올 수 없습니다.",
+                            ageRating: "전체 관람가",
+                            releaseDate: "개봉 예정"
+                        )
                     )
                 }
             } label: {
-                movie.posterImage
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(height: 212)
+                LazyImage(url: URL(string: movie.posterImage)) { state in
+                    if let image = state.image {
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                    } else if state.error != nil {
+                        Rectangle()
+                            .fill(Color.gray.opacity(0.3))
+                            .overlay(
+                                Image(systemName: "photo")
+                                    .foregroundColor(.gray)
+                            )
+                    } else {
+                        ProgressView()
+                    }
+                }
+                .frame(height: 212)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
             }
             
             NavigationLink {
@@ -63,9 +68,11 @@ struct MoviePoster: View {
             Text(movie.title)
                 .font(.bold22)
                 .lineLimit(1)
+                .foregroundStyle(.black)
             Text("누적관객수 \(movie.audienceCount)")
                 .lineLimit(1)
                 .font(.medium18)
+                .foregroundStyle(.gray)
         }
         .frame(width: 148)
         .padding([.leading, .bottom], 6)
@@ -74,6 +81,14 @@ struct MoviePoster: View {
 
 #Preview {
     NavigationStack {
-        MoviePoster(movie: HomeViewModel().posterList[0])
+        MoviePoster(
+            movie: MovieModel(
+                id: 1,
+                posterImage: "https://image.tmdb.org/t/p/w500/example.jpg",
+                title: "예제 영화",
+                audienceCount: "10만"
+            )
+        )
+        .environment(HomeViewModel())
     }
 }
