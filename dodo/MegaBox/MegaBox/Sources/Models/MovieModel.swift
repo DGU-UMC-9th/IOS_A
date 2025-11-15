@@ -9,16 +9,16 @@ import Foundation
 import SwiftUI
 
 struct MovieModel: Identifiable {
-    let id = UUID()
-    var posterImage: Image
+    let id: Int
+    var posterImage: String
     var title: String
     var audienceCount: String
 }
 
 struct MovieDetail: Identifiable {
-    let id = UUID()
-    var headerImage: Image
-    var posterImage: Image
+    let id: Int
+    var headerImage: String
+    var posterImage: String
     var title: String
     var engTitle: String
     var description: String
