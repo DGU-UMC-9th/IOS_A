@@ -6,6 +6,15 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		30277E012EC1FB1000E794AA /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 30277E002EC1FB1000E794AA /* Alamofire */; };
+		30277E062EC2009300E794AA /* KakaoSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 30277E052EC2009300E794AA /* KakaoSDK */; };
+		30277E082EC2009300E794AA /* KakaoSDKAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 30277E072EC2009300E794AA /* KakaoSDKAuth */; };
+		30277E0A2EC2009300E794AA /* KakaoSDKCert in Frameworks */ = {isa = PBXBuildFile; productRef = 30277E092EC2009300E794AA /* KakaoSDKCert */; };
+		30277E0C2EC2009300E794AA /* KakaoSDKCertCore in Frameworks */ = {isa = PBXBuildFile; productRef = 30277E0B2EC2009300E794AA /* KakaoSDKCertCore */; };
+		30277E0E2EC2009300E794AA /* KakaoSDKCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 30277E0D2EC2009300E794AA /* KakaoSDKCommon */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		301E60822E882915003090DB /* megabox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = megabox.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -15,16 +24,28 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
+				Secret.xcconfig,
 			);
 			target = 301E60812E882915003090DB /* megabox */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+		30277E132EC2105C00E794AA /* Exceptions for "megabox" folder in "Compile Sources" phase from "megabox" target */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			buildPhase = 301E607E2E882915003090DB /* Sources */;
+			membershipExceptions = (
+				Secret.xcconfig,
+			);
+		};
+/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		301E60842E882915003090DB /* megabox */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				301E61132E882A6D003090DB /* Exceptions for "megabox" folder in "megabox" target */,
+				30277E132EC2105C00E794AA /* Exceptions for "megabox" folder in "Compile Sources" phase from "megabox" target */,
 			);
 			path = megabox;
 			sourceTree = "<group>";
@@ -36,6 +57,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				30277E012EC1FB1000E794AA /* Alamofire in Frameworks */,
+				30277E062EC2009300E794AA /* KakaoSDK in Frameworks */,
+				30277E0C2EC2009300E794AA /* KakaoSDKCertCore in Frameworks */,
+				30277E082EC2009300E794AA /* KakaoSDKAuth in Frameworks */,
+				30277E0E2EC2009300E794AA /* KakaoSDKCommon in Frameworks */,
+				30277E0A2EC2009300E794AA /* KakaoSDKCert in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +105,12 @@
 			);
 			name = megabox;
 			packageProductDependencies = (
+				30277E002EC1FB1000E794AA /* Alamofire */,
+				30277E052EC2009300E794AA /* KakaoSDK */,
+				30277E072EC2009300E794AA /* KakaoSDKAuth */,
+				30277E092EC2009300E794AA /* KakaoSDKCert */,
+				30277E0B2EC2009300E794AA /* KakaoSDKCertCore */,
+				30277E0D2EC2009300E794AA /* KakaoSDKCommon */,
 			);
 			productName = megabox;
 			productReference = 301E60822E882915003090DB /* megabox.app */;
@@ -107,6 +140,10 @@
 			);
 			mainGroup = 301E60792E882915003090DB;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				30277DFF2EC1FB1000E794AA /* XCRemoteSwiftPackageReference "Alamofire" */,
+				30277E042EC2006F00E794AA /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 301E60832E882915003090DB /* Products */;
 			projectDirPath = "";
@@ -140,6 +177,8 @@
 /* Begin XCBuildConfiguration section */
 		301E608B2E882916003090DB /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 301E60842E882915003090DB /* megabox */;
+			baseConfigurationReferenceRelativePath = Secret.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -203,6 +242,8 @@
 		};
 		301E608C2E882916003090DB /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 301E60842E882915003090DB /* megabox */;
+			baseConfigurationReferenceRelativePath = Secret.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -259,6 +300,8 @@
 		};
 		301E608E2E882916003090DB /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 301E60842E882915003090DB /* megabox */;
+			baseConfigurationReferenceRelativePath = Secret.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -287,6 +330,8 @@
 		};
 		301E608F2E882916003090DB /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 301E60842E882915003090DB /* megabox */;
+			baseConfigurationReferenceRelativePath = Secret.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -335,6 +380,58 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		30277DFF2EC1FB1000E794AA /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.10.2;
+			};
+		};
+		30277E042EC2006F00E794AA /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kakao/kakao-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.25.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		30277E002EC1FB1000E794AA /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 30277DFF2EC1FB1000E794AA /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		30277E052EC2009300E794AA /* KakaoSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 30277E042EC2006F00E794AA /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
+			productName = KakaoSDK;
+		};
+		30277E072EC2009300E794AA /* KakaoSDKAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 30277E042EC2006F00E794AA /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
+			productName = KakaoSDKAuth;
+		};
+		30277E092EC2009300E794AA /* KakaoSDKCert */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 30277E042EC2006F00E794AA /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
+			productName = KakaoSDKCert;
+		};
+		30277E0B2EC2009300E794AA /* KakaoSDKCertCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 30277E042EC2006F00E794AA /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
+			productName = KakaoSDKCertCore;
+		};
+		30277E0D2EC2009300E794AA /* KakaoSDKCommon */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 30277E042EC2006F00E794AA /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
+			productName = KakaoSDKCommon;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 301E607A2E882915003090DB /* Project object */;
 }

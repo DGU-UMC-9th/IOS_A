@@ -13,6 +13,8 @@ struct UserInfoManageView: View {
     @State private var newName: String = ""
     @Environment(\.dismiss) private var dismiss
     
+    @EnvironmentObject var model: LoginViewModel
+    
     var body: some View {
         VStack{
             headerSection
@@ -73,12 +75,18 @@ struct UserInfoManageView: View {
                             )
                     }
                 }
-                .frame(width: .infinity, height: 21)
                 Divider()
+                Spacer()
+                Button{
+                    model.logout()
+                } label : {
+                    Text("로그아웃")
+                        .font(.medium16)
+                        .foregroundStyle(.gray03)
+                }
             }
         }
         .padding(.horizontal, 16)
-//        .padding(.bottom, 580)
     }
     
 }
@@ -86,5 +94,6 @@ struct UserInfoManageView: View {
 #Preview {
     NavigationStack {
         UserInfoManageView()
+                .environmentObject(LoginViewModel()) // 프리뷰용 model 주입
     }
 }

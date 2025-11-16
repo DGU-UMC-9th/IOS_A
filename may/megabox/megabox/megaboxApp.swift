@@ -6,12 +6,20 @@
 //
 
 import SwiftUI
+import KakaoSDKAuth
 
 @main
-struct megaboxApp: App {
+struct MegaBoxApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .onOpenURL { url in
+                    if AuthApi.isKakaoTalkLoginUrl(url) {
+                        _ = AuthController.handleOpenUrl(url: url)
+                    }
+                }
         }
     }
 }

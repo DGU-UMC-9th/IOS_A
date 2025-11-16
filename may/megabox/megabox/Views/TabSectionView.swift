@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct TabSectionView: View {
+    @EnvironmentObject var model: LoginViewModel
+    
     var body: some View {
         TabView {
             Tab("홈", systemImage: "house.fill") {
@@ -21,6 +23,7 @@ struct TabSectionView: View {
             }
             Tab("마이페이지", systemImage: "person") {
                 UserInfoView()
+                    .environmentObject(model)
             }
         }
     }
@@ -28,4 +31,5 @@ struct TabSectionView: View {
 
 #Preview {
     TabSectionView()
+        .environmentObject(LoginViewModel())
 }
