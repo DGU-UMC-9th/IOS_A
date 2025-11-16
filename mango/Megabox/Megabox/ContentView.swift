@@ -12,10 +12,15 @@ struct ContentView: View {
     @Environment(NavigationRouterViewModel.self) private var router
 
     var body: some View {
-        if loginViewModel.isLoginSuccess {
-            MainTabView()
-        } else {
-            LoginView(viewModel: $loginViewModel)
+        Group{
+            if loginViewModel.isLoginSuccess {
+                MainTabView()
+            } else {
+                LoginView(viewModel: $loginViewModel)
+            }
+        }
+        .onAppear(){
+            loginViewModel.autoLoginConfirm()
         }
     }
 }
