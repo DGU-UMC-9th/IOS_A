@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct MovieDetailView: View {
     
@@ -59,12 +60,21 @@ struct MovieDetailView: View {
     
     private var movieSection: some View {
         VStack(alignment: .center, spacing: 7) {
-            movie.headerImage
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(height: 248)
-                .frame(maxWidth: .infinity)
-                .multilineTextAlignment(.center)
+            if let headerURL = URL(string: movie.headerImage), !movie.headerImage.isEmpty {
+                KFImage(headerURL)
+                    .placeholder {
+                        ProgressView()
+                            .frame(height: 248)
+                    }
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(height: 248)
+                    .frame(maxWidth: .infinity)
+            } else {
+                Color.gray02
+                    .frame(height: 248)
+                    .frame(maxWidth: .infinity)
+            }
             
             VStack(alignment: .center, spacing: 9) {
                 Text(movie.title)
@@ -105,10 +115,19 @@ struct MovieDetailView: View {
     
     private var infoSection: some View {
         HStack(alignment: .top, spacing: 12) {
-            movie.posterImage
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(height: 120)
+            if let posterURL = URL(string: movie.posterImage), !movie.posterImage.isEmpty {
+                KFImage(posterURL)
+                    .placeholder {
+                        ProgressView()
+                            .frame(height: 120)
+                    }
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(height: 120)
+            } else {
+                Color.gray02
+                    .frame(height: 120)
+            }
             
             VStack(alignment: .leading, spacing: 8){
                 Text(movie.ageRating)
@@ -132,11 +151,12 @@ struct MovieDetailView: View {
 
 #Preview {
     MovieDetailView(movie: MovieDetail(
-        headerImage: Image(.detailImg),
-        posterImage: Image(.detailPoster),
+        id: 1,
         title: "F1 더 무비",
         engTitle: "F1 : The Movie",
-        description: "최고가 되지 못한 전설 VS 최고가 되고 싶은 루키\n\n한때 주목받는 유망주였지만 끔찍한 사고로 F1에서 우승하지 못하고 한순간에 추락한 드라이버 ‘손; 헤이스'(브래드 피트).\n그의 오랜 동료인 ‘루벤 세르반테스'(하비에르 바르뎀)에게 레이싱 복귀를 제안받으며 최하위 팀인 APGXP에 합류한다.",
+        description: "최고가 되지 못한 전설 VS 최고가 되고 싶은 루키\n\n한때 주목받는 유망주였지만 끔찍한 사고로 F1에서 우승하지 못하고 한순간에 추락한 드라이버 '손; 헤이스'(브래드 피트).\n그의 오랜 동료인 '루벤 세르반테스'(하비에르 바르뎀)에게 레이싱 복귀를 제안받으며 최하위 팀인 APGXP에 합류한다.",
+        headerImage: "https://img1.daumcdn.net/thumb/R1280x0.fwebp/?fname=http://t1.daumcdn.net/brunch/service/user/eAde/image/hAvz8GkXDWrUldW0cq94E0l8Tec.JPG",
+        posterImage: "https://i.namu.wiki/i/adv1wJeGLlNKhMLHvPupi2eu1Ruw4mFmcjAWjafTpVnaqIakitYIoC7ax-2Wy2edhd_g3A6mtd-0_l7j1pvuzA.webp",
         ageRating: "12세 이상 관람가",
         releaseDate: "2025.06.25 개봉"
     ))
