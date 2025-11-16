@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		301DDF9D2EC9B6D100F459D9 /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = 301DDF9C2EC9B6D100F459D9 /* Moya */; };
+		301DDFA42EC9BC8500F459D9 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 301DDFA32EC9BC8500F459D9 /* Kingfisher */; };
 		30277E012EC1FB1000E794AA /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 30277E002EC1FB1000E794AA /* Alamofire */; };
 		30277E062EC2009300E794AA /* KakaoSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 30277E052EC2009300E794AA /* KakaoSDK */; };
 		30277E082EC2009300E794AA /* KakaoSDKAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 30277E072EC2009300E794AA /* KakaoSDKAuth */; };
@@ -61,7 +63,9 @@
 				30277E062EC2009300E794AA /* KakaoSDK in Frameworks */,
 				30277E0C2EC2009300E794AA /* KakaoSDKCertCore in Frameworks */,
 				30277E082EC2009300E794AA /* KakaoSDKAuth in Frameworks */,
+				301DDFA42EC9BC8500F459D9 /* Kingfisher in Frameworks */,
 				30277E0E2EC2009300E794AA /* KakaoSDKCommon in Frameworks */,
+				301DDF9D2EC9B6D100F459D9 /* Moya in Frameworks */,
 				30277E0A2EC2009300E794AA /* KakaoSDKCert in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -111,6 +115,8 @@
 				30277E092EC2009300E794AA /* KakaoSDKCert */,
 				30277E0B2EC2009300E794AA /* KakaoSDKCertCore */,
 				30277E0D2EC2009300E794AA /* KakaoSDKCommon */,
+				301DDF9C2EC9B6D100F459D9 /* Moya */,
+				301DDFA32EC9BC8500F459D9 /* Kingfisher */,
 			);
 			productName = megabox;
 			productReference = 301E60822E882915003090DB /* megabox.app */;
@@ -143,6 +149,8 @@
 			packageReferences = (
 				30277DFF2EC1FB1000E794AA /* XCRemoteSwiftPackageReference "Alamofire" */,
 				30277E042EC2006F00E794AA /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */,
+				301DDF9B2EC9B6D100F459D9 /* XCRemoteSwiftPackageReference "Moya" */,
+				301DDFA22EC9BC8500F459D9 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 301E60832E882915003090DB /* Products */;
@@ -382,6 +390,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		301DDF9B2EC9B6D100F459D9 /* XCRemoteSwiftPackageReference "Moya" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Moya/Moya";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 15.0.3;
+			};
+		};
+		301DDFA22EC9BC8500F459D9 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.6.1;
+			};
+		};
 		30277DFF2EC1FB1000E794AA /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
@@ -401,6 +425,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		301DDF9C2EC9B6D100F459D9 /* Moya */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 301DDF9B2EC9B6D100F459D9 /* XCRemoteSwiftPackageReference "Moya" */;
+			productName = Moya;
+		};
+		301DDFA32EC9BC8500F459D9 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 301DDFA22EC9BC8500F459D9 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
 		30277E002EC1FB1000E794AA /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 30277DFF2EC1FB1000E794AA /* XCRemoteSwiftPackageReference "Alamofire" */;
