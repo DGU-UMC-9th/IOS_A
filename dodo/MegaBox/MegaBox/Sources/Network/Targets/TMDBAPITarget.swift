@@ -30,7 +30,7 @@ extension TMDBAPITarget: TMDBTargetType {
     var task: Moya.Task {
         switch self {
         case .getMovies:
-            return .requestParameters(parameters: ["language": "ko-KR"], encoding: URLEncoding.default)
+            return .requestParameters(parameters: ["language": "ko-KR", "region": "KR"], encoding: URLEncoding.default)
         }
     }
 }
