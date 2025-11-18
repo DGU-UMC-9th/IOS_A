@@ -15,14 +15,15 @@ extension TMDBMovieDTO{
     func toMovieModel() -> MovieModel {
         // 포스터 이미지 URL 경로 (TMDB URL + 경로)
         let fullPosterURL = "https://image.tmdb.org/t/p/w500/\(self.posterPath ?? "")"
+        let fullBackdropURL = "https://image.tmdb.org/t/p/original/\(self.backdropPath ?? "")"
         let ageRating = self.adult ? "청소년 관람불가" : "12세 이상 관람가"
         
         return MovieModel(
             movieTitle: self.title,
             movieCount: "50만",
             movieImageName: fullPosterURL,
+            topPosterImageName: fullBackdropURL,
             // TMDB에 없는 필드
-            topPosterImageName: "TopPoster_default",
             bottomPosterImageName: "BottomPoster_default",
             
             originalTitle: self.originalTitle,
