@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import NukeUI
 
 struct MovieDetailView: View {
     @State var movie: MovieDetail
@@ -14,10 +15,16 @@ struct MovieDetailView: View {
     var body: some View {
         VStack(spacing: 8) {
             ScrollView {
-                movie.headerImage
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(height: 248)
+                LazyImage(url: URL(string: movie.headerImage)) { state in
+                    if let image = state.image {
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                    } else {
+                        Color.gray04
+                            .frame(height: 240)
+                    }
+                }
                 Text(movie.title)
                     .font(.bold24)
                 Text(movie.engTitle)
@@ -43,6 +50,7 @@ struct MovieDetailView: View {
                     .font(.headline)
             }
         }
+        .navigationBarTitleDisplayMode(.inline)
     }
     
     var tabBar: some View {
@@ -68,10 +76,16 @@ struct MovieDetailView: View {
     
     var infoSection: some View {
         HStack(alignment: .top, spacing: 16) {
-            movie.posterImage
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 100, height: 120)
+            LazyImage(url: URL(string: movie.posterImage)) { state in
+                if let image = state.image {
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 100, height: 120)
+                } else {
+                    Color.gray04
+                }
+            }
             
             VStack(alignment: .leading, spacing: 8) {
                 Text(movie.ageRating)
@@ -101,13 +115,14 @@ struct MovieDetailView: View {
 #Preview {
     NavigationStack {
         MovieDetailView(movie: MovieDetail(
-            headerImage: Image(.movieDetailHeader),
-            posterImage: Image(.poster1),
-            title: "F1 더 무비",
-            engTitle: "F1 : The Movie",
-            description: "최고가 되지 못한 전설 VS 최고가 되고 싶은 루키\n\n한때 주목받는 유망주였지만 급격한 사고로 F1에서 우승하지 못하고,\n한순간에 추락한 드라이버 '손: 헤이스'(브래드 피트).\n그의 오랜 동료인 '루벤 세르반테스'(하비에르 바르뎀)에게 레이싱 복귀를 제안받으며 최하위 팀인 APGXP에 합류한다.",
-            ageRating: "12세 이상 관람가",
-            releaseDate: "2025.06.25 개봉"
+            id: 1218925,
+            headerImage: "https://image.tmdb.org/t/p/w500/gqTz24ZRsCP6AKjARmEivY7m0cK.jpg",
+            posterImage: "https://image.tmdb.org/t/p/w500/Amu0HNWfpxo2ZaulueNVxDLADz8.jpg",
+            title: "극장판 체인소 맨: 레제편",
+            engTitle: "チェンソーマン レゼ篇",
+            description: "데블 헌터로 일하는 소년 ‘덴지’는 조직의 배신으로 죽음에 내몰린 순간 전기톱 악마견 ‘포치타’와의 계약으로 하나로 합쳐져 누구도 막을 수 없는 존재 ‘체인소 맨’으로 다시 태어난다. 악마와 사냥꾼, 그리고 정체불명의 적들이 얽힌 잔혹한 전쟁 속에서 ‘레제’라는 이름의 미스터리한 소녀가 ‘덴지’ 앞에 나타나는데… ‘덴지’는 사랑이라는 감정에 이끌려 지금껏 가장 위험한 배틀에 몸을 던진다!",
+            ageRating: "15세 이상 관람가",
+            releaseDate: "2025.09.19 개봉"
         ))
     }
 }

@@ -11,16 +11,11 @@ struct ContentView: View {
     @State private var viewModel = LoginViewModel()
     
     var body: some View {
-        NavigationStack {
-            if viewModel.isAuthenticated {
-                MegaBoxTabView()
-                    .transition(.opacity)
-            } else {
-                LoginView(vm: viewModel)
-                    .transition(.opacity)
-            }
+        if viewModel.isAuthenticated {
+            MegaBoxTabView()
+        } else {
+            LoginView(vm: viewModel)
         }
-        .animation(.easeInOut(duration: 0.3), value: viewModel.isAuthenticated)
     }
 }
 

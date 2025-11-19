@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct HomeView: View {
+    @Environment(HomeViewModel.self) private var vm
     @State private var selectedTab: HomeType = .home
-    @State var vm = HomeViewModel()
     
     var body: some View {
         NavigationStack {
@@ -26,6 +26,11 @@ struct HomeView: View {
                     }
                     .padding(.horizontal ,8)
                 }
+            }
+        }
+        .task {
+            if vm.posterList.isEmpty {
+                await vm.fetchMovies()
             }
         }
     }
@@ -123,4 +128,5 @@ struct HomeView: View {
 
 #Preview {
     HomeView()
+        .environment(HomeViewModel())
 }
