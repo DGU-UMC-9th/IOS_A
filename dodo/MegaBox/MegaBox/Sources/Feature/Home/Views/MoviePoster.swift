@@ -37,7 +37,7 @@ struct MoviePoster: View {
                     if let image = state.image {
                         image
                             .resizable()
-                            .aspectRatio(contentMode: .fit)
+                            .aspectRatio(contentMode: .fill)
                     } else if state.error != nil {
                         Rectangle()
                             .fill(Color.gray.opacity(0.3))
