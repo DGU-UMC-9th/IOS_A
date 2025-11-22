@@ -104,14 +104,14 @@ struct LoginView: View {
             HStack(spacing: 70) {
                 // 카카오 로그인 버튼
                 Button {
-                    print("🟡 Kakao button tapped")
-                    handleKakaoLogin()
+                    
                 } label: {
                     Image(.loginBtn1) // 카카오 로그인 이미지
                 }
                 
                 Button {
-                    // 네이버 로그인
+                    print("🟡 Kakao button tapped")
+                    handleKakaoLogin()
                 } label: {
                     Image(.loginBtn2)
                 }
@@ -131,28 +131,22 @@ struct LoginView: View {
     }
     
     private func handleKakaoLogin() {
-            guard let window = UIApplication.shared.connectedScenes
-                .compactMap({ $0 as? UIWindowScene })
-                .flatMap({ $0.windows })
-                .first(where: { $0.isKeyWindow }) else {
-                return
+        print("🟡 Kakao button tapped")
+        
+        kakaoManager.loginWithKakao(
+            onSuccess: { accessToken, refreshToken, userInfo in
+                viewModel.loginWithKakao(
+                    accessToken: accessToken,
+                    refreshToken: refreshToken,
+                    userInfo: userInfo
+                )
+            },
+            onFailure: { error in
+                viewModel.errorMessage = "카카오 로그인에 실패했습니다."
+                showAlert = true
             }
-            
-            kakaoManager.loginWithKakao(
-                presentationAnchor: window,
-                onSuccess: { accessToken, refreshToken, userInfo in
-                    viewModel.loginWithKakao(
-                        accessToken: accessToken,
-                        refreshToken: refreshToken,
-                        userInfo: userInfo
-                    )
-                },
-                onFailure: { error in
-                    viewModel.errorMessage = "카카오 로그인에 실패했습니다."
-                    showAlert = true
-                }
-            )
-        }
+        )
+    }
 }
 
 
