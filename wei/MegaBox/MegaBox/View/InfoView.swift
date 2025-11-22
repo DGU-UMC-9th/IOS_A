@@ -1,4 +1,3 @@
-//
 //  Info.swift
 //  MegaBox
 //
@@ -9,11 +8,11 @@ import Foundation
 import SwiftUI
 import Observation
 
-
 struct InfoView: View {
     
-    @AppStorage("id") private var userID: String = "Guest"
-    @AppStorage("name") private var name: String = "이연우"
+//    @AppStorage("id") private var userID: String = "Guest"
+//    @AppStorage("name") private var name: String = "이연우"
+    @State var viewModel: LoginViewModel
     @Binding var path: NavigationPath
     
     var body: some View {
@@ -73,8 +72,19 @@ struct InfoView: View {
         }
         
     }
+    private var loginTagText: String {
+           switch viewModel.loginType {
+           case .kakao:
+               return "KAKAO"
+           case .normal:
+               return "WELCOME"
+           case .none:
+               return "GUEST"
+           }
+       }
     
     private var maskedName: String {
+        let name = viewModel.name.isEmpty ? "Guest" : viewModel.name
             
             guard name.count > 1 else {
                 return name

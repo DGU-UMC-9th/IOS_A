@@ -15,7 +15,7 @@ struct RootView: View {
         Group {
             if loginViewModel.isLoggedIn {
                 // 로그인 후: 메인 플로우
-                MainTabView()
+                MainTabView(viewModel: loginViewModel)
                     // 각 탭 내부에서 NavigationStack을 가집니다.
             } else {
                 // 로그인 전: 로그인 플로우
