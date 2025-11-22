@@ -19,7 +19,9 @@ struct TabSectionView: View {
                 MovieBookingView()
             }
             Tab("모바일 오더", systemImage: "popcorn") {
-                
+                NavigationStack {
+                        MobileOrderView()
+                    }
             }
             Tab("마이페이지", systemImage: "person") {
                 UserInfoView()
