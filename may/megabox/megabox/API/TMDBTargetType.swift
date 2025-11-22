@@ -13,7 +13,9 @@ enum TMDBAPITarget {
 }
 
 extension TMDBAPITarget: TargetType {
-    var baseURL: URL { URL(string: "https://api.themoviedb.org/3")! }
+    var baseURL: URL { 
+        URL(string: Config.getBaseURL())!
+    }
     
     var path: String {
         switch self {
@@ -30,7 +32,7 @@ extension TMDBAPITarget: TargetType {
         case .nowPlaying(let language, let page, let region):
             return .requestParameters(
                 parameters: [
-                    "api_key": getAPIKey(),
+                    "api_key": Config.getAPIKey(),
                     "language": language,
                     "page": page,
                     "region": region
@@ -45,21 +47,6 @@ extension TMDBAPITarget: TargetType {
     }
     
     var sampleData: Data { Data() }
-    
-    private func getAPIKey() -> String {
-        if let apiKey = Bundle.main.infoDictionary?["MOVIE_API_KEY"] as? String {
-            return apiKey
-        }
-        
-        // Fallback: xcconfig 파일에서 직접 읽기
-        guard let path = Bundle.main.path(forResource: "Secret", ofType: "xcconfig"),
-              let contents = try? String(contentsOfFile: path),
-              let apiKeyLine = contents.components(separatedBy: .newlines).first(where: { $0.contains("MOVIE_API_KEY") }),
-              let apiKey = apiKeyLine.components(separatedBy: "=").last?.trimmingCharacters(in: .whitespaces) else {
-            return ""
-        }
-        return apiKey
-    }
 }
 
 // MARK: - MoyaProvider async/await Extension
