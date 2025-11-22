@@ -9,9 +9,13 @@ import SwiftUI
 
 struct HomeView: View {
     @State private var selected: HomeCategory = .home
-    @State var model = HomeViewModel()
+    @State var model: HomeViewModel
     
     @State private var selectedTab: MovieTab = .chart
+    
+    init(model: HomeViewModel = HomeViewModel()) {
+        _model = State(initialValue: model)
+    }
     
     var body: some View {
         NavigationStack {
@@ -31,6 +35,9 @@ struct HomeView: View {
                     }
                 }
             }
+        }
+        .task {
+            await model.fetchNowPlayingMovies()
         }
     }
     
@@ -58,8 +65,18 @@ struct HomeView: View {
         Group {
             if selectedTab == .chart {
                 VStack(spacing: 40){
-                    MovieChartView(chartList: model.chartList)
-                    MovieFeedView(feedList: model.feedList)
+                    if model.isLoading {
+                        ProgressView()
+                            .frame(maxWidth: .infinity, minHeight: 200)
+                            .padding()
+                    } else if let errorMessage = model.errorMessage {
+                        Text(errorMessage)
+                            .foregroundColor(.red)
+                            .padding()
+                    } else {
+                        MovieChartView(chartList: model.chartList)
+                        MovieFeedView(feedList: model.feedList)
+                    }
                 }
                 .padding(.top, 10)
             } else if selectedTab == .comingSoon {
@@ -101,5 +118,6 @@ private struct ButtonSection: View {
 }
 
 #Preview{
-    HomeView()
+    let previewViewModel = HomeViewModel()
+    return HomeView(model: previewViewModel)
 }

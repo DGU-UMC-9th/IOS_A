@@ -7,84 +7,47 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		301DDF9D2EC9B6D100F459D9 /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = 301DDF9C2EC9B6D100F459D9 /* Moya */; };
-		301DDFA42EC9BC8500F459D9 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 301DDFA32EC9BC8500F459D9 /* Kingfisher */; };
-		30277E012EC1FB1000E794AA /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 30277E002EC1FB1000E794AA /* Alamofire */; };
-		30277E062EC2009300E794AA /* KakaoSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 30277E052EC2009300E794AA /* KakaoSDK */; };
-		30277E082EC2009300E794AA /* KakaoSDKAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 30277E072EC2009300E794AA /* KakaoSDKAuth */; };
-		30277E0A2EC2009300E794AA /* KakaoSDKCert in Frameworks */ = {isa = PBXBuildFile; productRef = 30277E092EC2009300E794AA /* KakaoSDKCert */; };
-		30277E0C2EC2009300E794AA /* KakaoSDKCertCore in Frameworks */ = {isa = PBXBuildFile; productRef = 30277E0B2EC2009300E794AA /* KakaoSDKCertCore */; };
-		30277E0E2EC2009300E794AA /* KakaoSDKCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 30277E0D2EC2009300E794AA /* KakaoSDKCommon */; };
+		30C6B7942EC8EB0E00CD7358 /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = 30C6B7932EC8EB0E00CD7358 /* Moya */; };
+		30C6B7B72EC8ECCC00CD7358 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 30C6B7B62EC8ECCC00CD7358 /* Alamofire */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		301E60822E882915003090DB /* megabox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = megabox.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		30C6B7782EC8EA8B00CD7358 /* APIManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = APIManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		301E61132E882A6D003090DB /* Exceptions for "megabox" folder in "megabox" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-				Secret.xcconfig,
-			);
-			target = 301E60812E882915003090DB /* megabox */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
-/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-		30277E132EC2105C00E794AA /* Exceptions for "megabox" folder in "Compile Sources" phase from "megabox" target */ = {
-			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
-			buildPhase = 301E607E2E882915003090DB /* Sources */;
-			membershipExceptions = (
-				Secret.xcconfig,
-			);
-		};
-/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		301E60842E882915003090DB /* megabox */ = {
+		30C6B77A2EC8EA8B00CD7358 /* APIManager */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				301E61132E882A6D003090DB /* Exceptions for "megabox" folder in "megabox" target */,
-				30277E132EC2105C00E794AA /* Exceptions for "megabox" folder in "Compile Sources" phase from "megabox" target */,
-			);
-			path = megabox;
+			path = APIManager;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		301E607F2E882915003090DB /* Frameworks */ = {
+		30C6B7752EC8EA8B00CD7358 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				30277E012EC1FB1000E794AA /* Alamofire in Frameworks */,
-				30277E062EC2009300E794AA /* KakaoSDK in Frameworks */,
-				30277E0C2EC2009300E794AA /* KakaoSDKCertCore in Frameworks */,
-				30277E082EC2009300E794AA /* KakaoSDKAuth in Frameworks */,
-				301DDFA42EC9BC8500F459D9 /* Kingfisher in Frameworks */,
-				30277E0E2EC2009300E794AA /* KakaoSDKCommon in Frameworks */,
-				301DDF9D2EC9B6D100F459D9 /* Moya in Frameworks */,
-				30277E0A2EC2009300E794AA /* KakaoSDKCert in Frameworks */,
+				30C6B7942EC8EB0E00CD7358 /* Moya in Frameworks */,
+				30C6B7B72EC8ECCC00CD7358 /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		301E60792E882915003090DB = {
+		30C6B76F2EC8EA8B00CD7358 = {
 			isa = PBXGroup;
 			children = (
-				301E60842E882915003090DB /* megabox */,
-				301E60832E882915003090DB /* Products */,
+				30C6B77A2EC8EA8B00CD7358 /* APIManager */,
+				30C6B7792EC8EA8B00CD7358 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		301E60832E882915003090DB /* Products */ = {
+		30C6B7792EC8EA8B00CD7358 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				301E60822E882915003090DB /* megabox.app */,
+				30C6B7782EC8EA8B00CD7358 /* APIManager.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -92,78 +55,70 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		301E60812E882915003090DB /* megabox */ = {
+		30C6B7772EC8EA8B00CD7358 /* APIManager */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 301E608D2E882916003090DB /* Build configuration list for PBXNativeTarget "megabox" */;
+			buildConfigurationList = 30C6B7832EC8EA8C00CD7358 /* Build configuration list for PBXNativeTarget "APIManager" */;
 			buildPhases = (
-				301E607E2E882915003090DB /* Sources */,
-				301E607F2E882915003090DB /* Frameworks */,
-				301E60802E882915003090DB /* Resources */,
+				30C6B7742EC8EA8B00CD7358 /* Sources */,
+				30C6B7752EC8EA8B00CD7358 /* Frameworks */,
+				30C6B7762EC8EA8B00CD7358 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				301E60842E882915003090DB /* megabox */,
+				30C6B77A2EC8EA8B00CD7358 /* APIManager */,
 			);
-			name = megabox;
+			name = APIManager;
 			packageProductDependencies = (
-				30277E002EC1FB1000E794AA /* Alamofire */,
-				30277E052EC2009300E794AA /* KakaoSDK */,
-				30277E072EC2009300E794AA /* KakaoSDKAuth */,
-				30277E092EC2009300E794AA /* KakaoSDKCert */,
-				30277E0B2EC2009300E794AA /* KakaoSDKCertCore */,
-				30277E0D2EC2009300E794AA /* KakaoSDKCommon */,
-				301DDF9C2EC9B6D100F459D9 /* Moya */,
-				301DDFA32EC9BC8500F459D9 /* Kingfisher */,
+				30C6B7932EC8EB0E00CD7358 /* Moya */,
+				30C6B7B62EC8ECCC00CD7358 /* Alamofire */,
 			);
-			productName = megabox;
-			productReference = 301E60822E882915003090DB /* megabox.app */;
+			productName = APIManager;
+			productReference = 30C6B7782EC8EA8B00CD7358 /* APIManager.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		301E607A2E882915003090DB /* Project object */ = {
+		30C6B7702EC8EA8B00CD7358 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1640;
-				LastUpgradeCheck = 1640;
+				LastSwiftUpdateCheck = 2600;
+				LastUpgradeCheck = 2600;
 				TargetAttributes = {
-					301E60812E882915003090DB = {
-						CreatedOnToolsVersion = 16.4;
+					30C6B7772EC8EA8B00CD7358 = {
+						CreatedOnToolsVersion = 26.0.1;
 					};
 				};
 			};
-			buildConfigurationList = 301E607D2E882915003090DB /* Build configuration list for PBXProject "megabox" */;
+			buildConfigurationList = 30C6B7732EC8EA8B00CD7358 /* Build configuration list for PBXProject "APIManager" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
 			);
-			mainGroup = 301E60792E882915003090DB;
+			mainGroup = 30C6B76F2EC8EA8B00CD7358;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				30277DFF2EC1FB1000E794AA /* XCRemoteSwiftPackageReference "Alamofire" */,
-				30277E042EC2006F00E794AA /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */,
-				301DDF9B2EC9B6D100F459D9 /* XCRemoteSwiftPackageReference "Moya" */,
-				301DDFA22EC9BC8500F459D9 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				30C6B7922EC8EB0E00CD7358 /* XCRemoteSwiftPackageReference "Moya" */,
+				30C6B7B52EC8ECCC00CD7358 /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 301E60832E882915003090DB /* Products */;
+			productRefGroup = 30C6B7792EC8EA8B00CD7358 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				301E60812E882915003090DB /* megabox */,
+				30C6B7772EC8EA8B00CD7358 /* APIManager */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		301E60802E882915003090DB /* Resources */ = {
+		30C6B7762EC8EA8B00CD7358 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -173,7 +128,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		301E607E2E882915003090DB /* Sources */ = {
+		30C6B7742EC8EA8B00CD7358 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -183,10 +138,8 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		301E608B2E882916003090DB /* Debug */ = {
+		30C6B7812EC8EA8C00CD7358 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = 301E60842E882915003090DB /* megabox */;
-			baseConfigurationReferenceRelativePath = Secret.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -237,7 +190,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -248,10 +201,8 @@
 			};
 			name = Debug;
 		};
-		301E608C2E882916003090DB /* Release */ = {
+		30C6B7822EC8EA8C00CD7358 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = 301E60842E882915003090DB /* megabox */;
-			baseConfigurationReferenceRelativePath = Secret.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -296,7 +247,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -306,10 +257,8 @@
 			};
 			name = Release;
 		};
-		301E608E2E882916003090DB /* Debug */ = {
+		30C6B7842EC8EA8C00CD7358 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = 301E60842E882915003090DB /* megabox */;
-			baseConfigurationReferenceRelativePath = Secret.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -317,7 +266,6 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = megabox/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -328,18 +276,20 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.jieun.megabox;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jieun.APIManager;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		301E608F2E882916003090DB /* Release */ = {
+		30C6B7852EC8EA8C00CD7358 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = 301E60842E882915003090DB /* megabox */;
-			baseConfigurationReferenceRelativePath = Secret.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -347,7 +297,6 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = megabox/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -358,9 +307,13 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.jieun.megabox;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jieun.APIManager;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -369,20 +322,20 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		301E607D2E882915003090DB /* Build configuration list for PBXProject "megabox" */ = {
+		30C6B7732EC8EA8B00CD7358 /* Build configuration list for PBXProject "APIManager" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				301E608B2E882916003090DB /* Debug */,
-				301E608C2E882916003090DB /* Release */,
+				30C6B7812EC8EA8C00CD7358 /* Debug */,
+				30C6B7822EC8EA8C00CD7358 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		301E608D2E882916003090DB /* Build configuration list for PBXNativeTarget "megabox" */ = {
+		30C6B7832EC8EA8C00CD7358 /* Build configuration list for PBXNativeTarget "APIManager" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				301E608E2E882916003090DB /* Debug */,
-				301E608F2E882916003090DB /* Release */,
+				30C6B7842EC8EA8C00CD7358 /* Debug */,
+				30C6B7852EC8EA8C00CD7358 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -390,7 +343,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		301DDF9B2EC9B6D100F459D9 /* XCRemoteSwiftPackageReference "Moya" */ = {
+		30C6B7922EC8EB0E00CD7358 /* XCRemoteSwiftPackageReference "Moya" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Moya/Moya";
 			requirement = {
@@ -398,15 +351,7 @@
 				minimumVersion = 15.0.3;
 			};
 		};
-		301DDFA22EC9BC8500F459D9 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/onevcat/Kingfisher";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 8.6.1;
-			};
-		};
-		30277DFF2EC1FB1000E794AA /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+		30C6B7B52EC8ECCC00CD7358 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
 			requirement = {
@@ -414,58 +359,20 @@
 				minimumVersion = 5.10.2;
 			};
 		};
-		30277E042EC2006F00E794AA /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/kakao/kakao-ios-sdk";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.25.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		301DDF9C2EC9B6D100F459D9 /* Moya */ = {
+		30C6B7932EC8EB0E00CD7358 /* Moya */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 301DDF9B2EC9B6D100F459D9 /* XCRemoteSwiftPackageReference "Moya" */;
+			package = 30C6B7922EC8EB0E00CD7358 /* XCRemoteSwiftPackageReference "Moya" */;
 			productName = Moya;
 		};
-		301DDFA32EC9BC8500F459D9 /* Kingfisher */ = {
+		30C6B7B62EC8ECCC00CD7358 /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 301DDFA22EC9BC8500F459D9 /* XCRemoteSwiftPackageReference "Kingfisher" */;
-			productName = Kingfisher;
-		};
-		30277E002EC1FB1000E794AA /* Alamofire */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 30277DFF2EC1FB1000E794AA /* XCRemoteSwiftPackageReference "Alamofire" */;
+			package = 30C6B7B52EC8ECCC00CD7358 /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
-		};
-		30277E052EC2009300E794AA /* KakaoSDK */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 30277E042EC2006F00E794AA /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
-			productName = KakaoSDK;
-		};
-		30277E072EC2009300E794AA /* KakaoSDKAuth */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 30277E042EC2006F00E794AA /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
-			productName = KakaoSDKAuth;
-		};
-		30277E092EC2009300E794AA /* KakaoSDKCert */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 30277E042EC2006F00E794AA /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
-			productName = KakaoSDKCert;
-		};
-		30277E0B2EC2009300E794AA /* KakaoSDKCertCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 30277E042EC2006F00E794AA /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
-			productName = KakaoSDKCertCore;
-		};
-		30277E0D2EC2009300E794AA /* KakaoSDKCommon */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 30277E042EC2006F00E794AA /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
-			productName = KakaoSDKCommon;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
-	rootObject = 301E607A2E882915003090DB /* Project object */;
+	rootObject = 30C6B7702EC8EA8B00CD7358 /* Project object */;
 }

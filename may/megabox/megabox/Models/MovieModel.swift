@@ -7,46 +7,63 @@
 
 import SwiftUI
 import Foundation
+import Kingfisher
+
+import SwiftUI
 
 struct MovieModel: Identifiable {
-    let id = UUID()
-    var posterImage: Image
+    let id: Int
     var title: String
-    var audienceCnt: String
+    var posterImage: String
+    var audienceCount: String
     
+    // 원본 데이터 저장
+    var originalTitle: String?
+    var overview: String?
+    var backdropPath: String?
+    var releaseDate: String?
+    var adult: Bool
+}
+
+extension MovieModel {
     func toDetail() -> MovieDetail {
-        if(title=="F1: 더 무비"){
-            MovieDetail(
-                headerImage: Image(.detailImg),
-                posterImage: Image(.detailPoster),
-                title: "F1 더 무비",
-                engTitle: "F1 : The Movie",
-                description: "최고가 되지 못한 전설 VS 최고가 되고 싶은 루키\n\n한때 주목받는 유망주였지만 끔찍한 사고로 F1에서 우승하지 못하고 한순간에 추락한 드라이버 ‘손; 헤이스'(브래드 피트).\n그의 오랜 동료인 ‘루벤 세르반테스'(하비에르 바르뎀)에게 레이싱 복귀를 제안받으며 최하위 팀인 APGXP에 합류한다.",
-                ageRating: "12세 이상 관람가",
-                releaseDate: "2025.06.25 개봉"
-            )
+        let backdropURL = backdropPath != nil ? "https://image.tmdb.org/t/p/w500" + backdropPath! : ""
+        let posterURL = posterImage
+        
+        // 개봉일 형식 변환
+        let formattedDate = releaseDate != nil ? formatReleaseDate(releaseDate!) : ""
+        
+        return MovieDetail(
+            id: id,
+            title: title,
+            engTitle: originalTitle ?? title,
+            description: overview ?? "",
+            headerImage: backdropURL,
+            posterImage: posterURL,
+            ageRating: adult ? "19세 이상 관람가" : "12세 이상 관람가",
+            releaseDate: formattedDate
+        )
+    }
+    
+    private func formatReleaseDate(_ dateString: String) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
+        if let date = dateFormatter.date(from: dateString) {
+            dateFormatter.dateFormat = "yyyy.MM.dd"
+            return dateFormatter.string(from: date) + " 개봉"
         }
-        else{
-            MovieDetail(
-                headerImage: self.posterImage,
-                posterImage: self.posterImage,
-                title: self.title,
-                engTitle: self.title,
-                description: "내용 없음",
-                ageRating: "12세 연령 제한가",
-                releaseDate: "2025.10.04 개봉"
-            )
-        }
+        return dateString + " 개봉"
     }
 }
 
 struct MovieDetail: Identifiable {
-    let id = UUID()
-    var headerImage: Image
-    var posterImage: Image
+    let id: Int
     var title: String
     var engTitle: String
     var description: String
+    var headerImage: String
+    var posterImage: String
     var ageRating: String
     var releaseDate: String
 }
