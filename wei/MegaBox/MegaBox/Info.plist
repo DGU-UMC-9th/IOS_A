@@ -15,6 +15,8 @@
 	</array>
 	<key>KAKAO_APP_KEY</key>
 	<string>$(KAKAO_APP_KEY)</string>
+	<key>TMDB_ACCESS_TOKEN</key>
+	<string>$(TMDB_ACCESS_TOKEN)</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>kakaokompassauth</string>

@@ -7,49 +7,93 @@
 
 import Foundation
 import SwiftUI
+import Kingfisher
 
 struct MovieInfoView: View {
     
     let movie: MovieModel
-    var viewModel : MovieInfoViewModel = .init()
+    @State private var viewModel = MovieInfoViewModel()
     @Environment(\.dismiss) private var dismiss
     
-    private var movieInfo: MovieInfo? {
-        viewModel.movieInfo.first(where: { $0.name == movie.name })
-    }
     
     var body: some View {
         ScrollView {
             VStack(spacing:35) {
-                if let info = movieInfo {
+                if viewModel.isLoading {
+                    ProgressView("영화 정보를 불러오는 중...")
+                        .padding(.vertical, 100)
+                } else if let errorMessage = viewModel.errorMessage {
+                    VStack(spacing: 16) {
+                        Text("오류가 발생했습니다")
+                            .font(.bold18)
+                        Text(errorMessage)
+                            .font(.medium14)
+                            .foregroundColor(.gray03)
+                        Button("다시 시도") {
+                            Task {
+                                    if let serverId = movie.serverId {
+                                        await viewModel.fetchMovieDetail(movieId: serverId)
+                                    }
+                                }
+                        }
+                        .padding()
+                        .background(Color.purple03)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
+                    }
+                    .padding(.vertical, 100)
+                } else if let info = viewModel.movieInfo {
                     movieDescription(info: info)
                     BottomView(info: info, movie: movie)
                 } else {
                     Text("영화 정보를 찾을 수 없습니다")
+                        .padding(.vertical, 100)
                 }
                 
             }
         }
         .navigationTitle(movie.name)
+        .navigationBarTitleDisplayMode(.inline)
+        .task {
+            if let serverId = movie.serverId {
+                            await viewModel.fetchMovieDetail(movieId: serverId)
+                        }
+        }
 }
     
     private func movieDescription(info: MovieInfo) -> some View {
         VStack(spacing:9){
-            Image(info.poster)
-            VStack{
+            KFImage(URL(string: info.poster))
+                .placeholder {
+                    Rectangle()
+                        .fill(Color.gray02)
+                        .frame(height: 400)
+                        .overlay(
+                            ProgressView()
+                        )
+                }
+                .resizable()
+                .scaledToFit()
+                .frame(maxWidth: .infinity)
+                .clipped()
+            
+            VStack(spacing: 4) {
                 Text(info.name)
                     .font(.bold24)
                     .foregroundStyle(Color.black)
+                    .multilineTextAlignment(.center)
                 Text(info.englishName)
                     .font(.semiBold14)
                     .foregroundStyle(Color.gray03)
+                    .multilineTextAlignment(.center)
             }
-            .padding(.horizontal,16)
+            .padding(.horizontal, 16)
             
             Text(info.description)
                 .font(.semiBold18)
                 .foregroundStyle(Color.gray03)
-                .padding(.horizontal,22)
+                .padding(.horizontal, 22)
+                .multilineTextAlignment(.center)
         }
         
     }
@@ -81,10 +125,22 @@ struct MovieInfoView: View {
                     }
             
             HStack(alignment: .top, spacing: 16){
-                Image(movie.imageName)
-                    .resizable()
-                    .frame(width: 100, height: 120)
-                VStack(alignment: .leading, spacing: 8){
+                KFImage(URL(string: movie.imageName))
+                        .placeholder {
+                            Rectangle()
+                                .fill(Color.gray02)
+                                .frame(width: 100, height: 120)
+                                .overlay(
+                                    ProgressView()
+                                )
+                        }
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 100, height: 120)
+                        .clipped()
+                        .cornerRadius(4)
+                
+                VStack( spacing: 8){
                     Text("\(info.age)세 이상 관람가")
                         .font(.semiBold13)
                         .foregroundStyle(Color.black)
@@ -94,8 +150,8 @@ struct MovieInfoView: View {
                     Spacer()
                 }
             }
-            .padding(.trailing,200)
-            .padding(.leading,24)
+            .padding(.trailing,180)
+            //.padding(.leading,24)
         }
         
     }
@@ -106,8 +162,9 @@ struct MovieInfoView: View {
 #Preview {
     NavigationStack {
         MovieInfoView(movie: MovieModel(
-            name: "f1: 더 무비",
-            imageName: "f1",
+            serverId: 502356,
+            name: "슈퍼 마리오 브라더스",
+            imageName: "https://image.tmdb.org/t/p/w500/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
             audience: "20만",
             age: 12
         ))

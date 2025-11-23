@@ -7,37 +7,62 @@
 
 import Foundation
 import SwiftUI
+import Kingfisher
 
 struct HomeView: View {
     
-    var viewModel : MovieViewModel = .init()
+    @State var viewModel: MovieViewModel = .init()
     @Binding var path: NavigationPath
     
     var body: some View {
-        //NavigationStack(path: $path) {
-                    ScrollView {
-                        LazyVStack {
-                            TopBar
-                            ScrollView(.horizontal) {
-                                LazyHStack(spacing: 16) {
-                                    ForEach(viewModel.movies) { movie in
-                                        MovieCard(movie)
-                                    }
-                                }
-                                .padding(.horizontal, 16)
-                                .padding(.vertical, 25)
+        ScrollView {
+            LazyVStack {
+                TopBar
+                if viewModel.isLoading {
+                    ProgressView("영화 정보를 불러오는 중...")
+                        .padding(.vertical, 100)
+                } else if let errorMessage = viewModel.errorMessage {
+                    VStack(spacing: 16) {
+                        Text("오류가 발생했습니다")
+                            .font(.bold18)
+                        Text(errorMessage)
+                            .font(.medium14)
+                            .foregroundColor(.gray03)
+                        Button("다시 시도") {
+                            Task {
+                                await viewModel.fetchNowPlayingMovies()
                             }
-                            
-                            BottomInfo
                         }
+                        .padding()
+                        .background(Color.purple03)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
                     }
-                    .navigationDestination(for: UUID.self) { movieId in
-                        if let movie = viewModel.movies.first(where: { $0.id == movieId }) {
-                            MovieInfoView(movie: movie)
+                    .padding(.vertical, 100)
+                } else {
+                    ScrollView(.horizontal) {
+                        LazyHStack(spacing: 16) {
+                            ForEach(viewModel.movies) { movie in
+                                MovieCard(movie)
+                            }
                         }
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 25)
                     }
-                
+                    
+                }
+                BottomInfo
+            }
+        }
+        .task {
+            await viewModel.fetchNowPlayingMovies()
+        }
+        .navigationDestination(for: MovieModel.self) { movie in
+                    MovieInfoView(movie: movie)
+        }
     }
+    
+
     
     
     private var TopBar: some View {
@@ -99,11 +124,22 @@ struct HomeView: View {
     private func MovieCard(_ movie: MovieModel) -> some View {
         VStack(alignment: .leading ,spacing: 8) {
             Button(action:{
-                path.append(movie.id)
+                path.append(movie)
             },label:{
-                Image(movie.imageName)
+                KFImage(URL(string: movie.imageName))
+                    .placeholder {
+                        Rectangle()
+                            .fill(Color.gray02)
+                            .frame(width: 148, height: 200)
+                            .overlay(
+                                ProgressView()
+                            )
+                    }
                     .resizable()
+                    .scaledToFill()
                     .frame(width:148, height:200)
+                    .clipped()
+                    .cornerRadius(8)
             })
             
             
@@ -123,6 +159,10 @@ struct HomeView: View {
             Text(movie.name)
                 .font(.bold22)
                 .foregroundColor(.black)
+                .frame(width: 150, height: 24, alignment: .leading) 
+                    .clipped()
+            
+                
             
             Text("누적관객수 \(movie.audience)")
                 .font(.medium18)
