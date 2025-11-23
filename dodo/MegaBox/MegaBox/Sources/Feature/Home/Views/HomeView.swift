@@ -51,7 +51,7 @@ struct HomeView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .padding(.horizontal, 8)
+        .padding([.horizontal, .top])
     }
     
     var movieView: some View {
