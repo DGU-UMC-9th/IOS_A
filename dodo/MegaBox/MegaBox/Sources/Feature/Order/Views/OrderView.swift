@@ -15,7 +15,7 @@ struct OrderView: View {
             GeometryReader { geometry in
                 VStack(alignment: .leading) {
                     Image(.megaBoxSmallLogo)
-                        .padding([.leading, .vertical])
+                        .padding([.leading, .top])
                     ChangeTheater()
                     ScrollView {
                         VStack(spacing: 24) {
