@@ -67,7 +67,7 @@ struct OrderTab : View {
     
     var body: some View {
         NavigationStack(path: $path) {
-            HomeView(path: $path)
+            OrderView(path: $path)
         }
     }
 }

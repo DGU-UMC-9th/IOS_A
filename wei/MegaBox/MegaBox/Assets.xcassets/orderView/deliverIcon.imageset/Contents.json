@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "deliverIcon.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
