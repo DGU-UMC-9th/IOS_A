@@ -15,8 +15,7 @@ struct BadgeModifier: ViewModifier {
         content.overlay(alignment: .topLeading) {
             if let badge = badge {
                 Text(badge.title)
-                    .font(.regular12)
-                    .fontWeight(.bold)
+                    .font(.semiBold13)
                     .foregroundStyle(.white)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
@@ -70,23 +69,23 @@ struct MenuCard: View {
             
             VStack(alignment: .leading, spacing: 4) {
                 Text(menu.title)
-                    .font(.system(size: 14))
+                    .font(.semiBold14)
                     .foregroundStyle(menu.isAvailable ? .black : .gray)
                     .lineLimit(1)
                 
                 if let salesPrice = menu.salesPrice {
                     HStack(spacing: 4) {
                         Text(salesPrice)
-                            .font(.system(size: 16, weight: .bold))
+                            .font(.bold18)
                         
                         Text(menu.price)
-                            .font(.caption)
+                            .font(.regular12)
                             .strikethrough()
                             .foregroundStyle(.gray)
                     }
                 } else {
                     Text(menu.price)
-                        .font(.system(size: 16, weight: .bold))
+                        .font(.bold18)
                         .foregroundStyle(menu.isAvailable ? .black : .gray)
                 }
             }
