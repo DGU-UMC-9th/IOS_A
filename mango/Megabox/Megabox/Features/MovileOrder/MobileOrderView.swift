@@ -65,13 +65,13 @@ struct MobileOrderView : View {
                 router.push(.detailOrder)
             })
         
-        return VStack(spacing:60){
+        return VStack(spacing:70){
             HStack(spacing: 15){
                 OrderButton(model: orderModel)
-                    .frame(height: 330)
-                VStack(spacing:10){
+                    .frame(height: 370)
+                VStack(spacing:15){
                     OrderButton(model: storeChange)
-                        .frame(height: 160)
+                        .frame(height: 190)
                     OrderButton(model: gift)
                         .frame(height: 160)
                 }
