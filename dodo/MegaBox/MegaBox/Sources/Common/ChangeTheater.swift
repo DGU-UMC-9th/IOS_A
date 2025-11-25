@@ -19,7 +19,7 @@ struct ChangeTheater: View {
             Text("강남")
             Spacer()
             Button {
-                
+                action()
             } label: {
                 Text("극장 변경")
                     .foregroundStyle(isWhite ? .purple03 : .white)
