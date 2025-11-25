@@ -8,7 +8,7 @@
 import Foundation
 
 struct MovieDTO : Codable {
-    let id : String
+    let id : Int
     let title : String
     let age_rating : String
     let schedules : [ScheduleDTO]

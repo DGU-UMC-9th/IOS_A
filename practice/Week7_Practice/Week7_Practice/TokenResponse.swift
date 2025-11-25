@@ -1,8 +1,6 @@
-//
-//  TokenResponse.swift
-//  Week7_Practice
-//
-//  Created by 이연우 on 11/18/25.
-//
-
 import Foundation
+
+struct TokenResponse: Codable {
+    var accessToken: String
+    var refreshToken: String
+}

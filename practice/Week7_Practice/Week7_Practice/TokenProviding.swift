@@ -1,8 +1,13 @@
-//
-//  TokenProviding.swift
-//  Week7_Practice
-//
-//  Created by 이연우 on 11/18/25.
-//
+// TokenProviding.swift
 
 import Foundation
+
+protocol TokenProviding {
+    var accessToken: String? { get }
+    var refreshToken: String? { get }
+    
+    func update(accessToken: String)
+    func update(refreshToken: String)
+    func clear()
+}
+

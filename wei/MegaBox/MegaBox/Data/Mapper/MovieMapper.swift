@@ -5,7 +5,7 @@ struct MovieMapper {
         return MovieModel(
             serverId: dto.id,
             name: dto.title,
-            imageName: dto.title,  // 실제 이미지 매핑 필요 시 수정
+            imageName: dto.title,
             audience: "미집계",
             age: Int(dto.age_rating) ?? 0 
         )
