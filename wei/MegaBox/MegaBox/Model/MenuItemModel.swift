@@ -12,4 +12,9 @@ struct MenuItemModel: Identifiable {
     let name: String
     let price: Int
     let imageName: String
+    
+    let isBest: Bool = false
+    let isRecommended: Bool = false
+    let discountRate: Int? = nil
+    let isSoldOut: Bool = false
 }

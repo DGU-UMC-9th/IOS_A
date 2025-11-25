@@ -50,7 +50,7 @@ struct OrderView: View {
     
     private var headerView: some View {
         HStack {
-            Image("meBoxLogo") // 메가박스 로고
+            Image("meBoxLogo 1") // 메가박스 로고
                 .resizable()
                 .scaledToFit()
                 .frame(height: 40)
@@ -67,6 +67,7 @@ struct OrderView: View {
                 
                 print("극장 변경 버튼 탭")
             }
+        .PurpleTheaterBarStyle()
     }
     
     // 선택 카드 영역
