@@ -16,7 +16,7 @@ struct OrderView: View {
                 VStack(alignment: .leading) {
                     Image(.megaBoxSmallLogo)
                         .padding([.leading, .top])
-                    ChangeTheater()
+                    ChangeTheater(theaterName: "강남", action: {print("강남")})
                     ScrollView {
                         VStack(spacing: 24) {
                             orderSection(geometry: geometry)

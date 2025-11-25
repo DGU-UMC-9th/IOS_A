@@ -8,17 +8,16 @@
 import SwiftUI
 
 struct ChangeTheater: View {
+    let theaterName: String
     var isWhite: Bool = false
+    let action: () -> Void
     
     var body: some View {
         HStack(spacing: 12) {
             Image(.locator)
                 .renderingMode(.template)
-                .foregroundStyle(isWhite ? .black : .white)
             Text("강남")
-                .foregroundStyle(isWhite ? .black : .white)
             Spacer()
-            
             Button {
                 
             } label: {
@@ -34,6 +33,7 @@ struct ChangeTheater: View {
         .font(.semiBold13)
         .padding(12)
         .background(isWhite ? .white : .purple03)
+        .foregroundStyle(isWhite ? .black : .white)
     }
 }
 
@@ -42,7 +42,16 @@ struct ChangeTheater: View {
     VStack(alignment: .leading) {
         Image(.megaBoxSmallLogo)
             .padding(.leading)
-        ChangeTheater(isWhite: true)
+        ChangeTheater(
+            theaterName: "강남",
+            isWhite: false,
+            action: { print("purple") }
+        )
+        ChangeTheater(
+            theaterName: "강남",
+            isWhite: true,
+            action: { print("white") }
+        )
         Spacer()
     }
 }

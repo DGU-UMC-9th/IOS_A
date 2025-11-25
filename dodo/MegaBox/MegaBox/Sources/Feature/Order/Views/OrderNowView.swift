@@ -17,7 +17,7 @@ struct OrderNowView: View {
     
     var body: some View {
         VStack {
-            ChangeTheater(isWhite: true)
+            ChangeTheater(theaterName: "강남", action: {print("강남")})
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 24) {
                     ForEach(vm.menuList, id: \.title) { menu in
