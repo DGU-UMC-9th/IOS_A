@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct MovieCard: View {
     let movie: MovieModel
@@ -15,10 +16,19 @@ struct MovieCard: View {
         @Bindable var router = router
         
         VStack(alignment: .leading) {
-            Image(movie.movieImageName)
+            KFImage(URL(string: movie.movieImageName))
+                .placeholder{
+                    ProgressView()
+                        .frame(width: 150, height: 218)
+                        .background(Color.gray01)
+                }.resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(width: 150, height: 218)
+                .clipped()
                 .onTapGesture {
                     router.push(.detail(movie: movie))
                 }
+            
             Button(action: {}) {
                 Text("바로 예매")
                     .foregroundStyle(Color.purple03)

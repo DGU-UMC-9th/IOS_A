@@ -28,4 +28,11 @@ struct AppConfig {
         }
         return key
     }
+    
+    static let APIKey: String = {
+        guard let key = Bundle.main.object(forInfoDictionaryKey: "API_KEY") as? String else {
+            fatalError("API_KEY is not in Info.plist")
+        }
+        return key
+    }()
 }

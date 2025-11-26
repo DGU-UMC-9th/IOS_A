@@ -27,6 +27,9 @@ struct HomeView: View {
             .padding(.horizontal, 16)
             .padding(.vertical, 20)
         }
+        .task {
+            await viewModel.fetchNowPlayingMovies()
+        }
     }
     var headerSection: some View {
         VStack(alignment: .leading) {

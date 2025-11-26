@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct DetailMovieView: View{
     // 상위뷰로부터
@@ -19,7 +20,15 @@ struct DetailMovieView: View{
         
         ScrollView(showsIndicators: false){
             VStack{
-                Image(movie.topPosterImageName)
+                KFImage(URL(string: movie.topPosterImageName))
+                    .placeholder{
+                        ProgressView()
+                    }
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 441, height: 218)
+                    .clipped()
+                
                 Text(movie.movieTitle)
                     .font(.pretend(type: .bold, size: 24))
                 Text(movie.originalTitle)
@@ -103,10 +112,15 @@ struct DetailMovieView: View{
     
     var DetailInfoView: some View{
         HStack(alignment: .top){
-            Image(movie.bottomPosterImageName)
-                .resizable()
-                .scaledToFit()
+            KFImage(URL(string: movie.movieImageName))
+                .placeholder{
+                    ProgressView()
+                        .frame(width: 150, height: 218)
+                        .background(Color.gray01)
+                }.resizable()
+                .aspectRatio(contentMode: .fill)
                 .frame(width: 100, height: 120)
+                .clipped()
             VStack(alignment: .leading, spacing: 10){
                 Text(movie.rating)
                     .font(.pretend(type: .semibold, size: 13))
@@ -132,4 +146,3 @@ struct DetailMovieView: View{
         }
     }
 }
-
