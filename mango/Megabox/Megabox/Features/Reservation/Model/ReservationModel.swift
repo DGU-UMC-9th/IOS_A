@@ -16,13 +16,6 @@ struct MovieSelectModel: Identifiable{
     var isSelected: Bool
 }
 
-enum TheaterType: String, CaseIterable, Identifiable{
-    case gangnam = "강남"
-    case hongdae = "홍대"
-    case sinchon = "신촌"
-    
-    var id: String {rawValue} // id로 자신의 rawValue(문자열) 사용
-}
 struct TheaterInfo: Identifiable{
     let id = UUID()
     let theater:TheaterType

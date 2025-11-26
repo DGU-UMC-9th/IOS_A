@@ -52,6 +52,8 @@ struct MainTabView: View {
                 switch route {
                 case .detail(let movie):
                     DetailMovieView(movie: movie)
+                case .detailOrder:
+                    MobileOrderDetailView()
                 }
             }
         }

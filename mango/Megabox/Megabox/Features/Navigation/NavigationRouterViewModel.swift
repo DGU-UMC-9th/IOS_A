@@ -14,6 +14,7 @@ class NavigationRouterViewModel{
     
     func push(_ route:Route){
         path.append(route)
+        
     }
     
     func pop(){
