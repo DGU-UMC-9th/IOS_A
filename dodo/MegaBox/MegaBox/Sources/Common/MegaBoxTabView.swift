@@ -22,7 +22,7 @@ struct MegaBoxTabView: View {
             }
             
             Tab("모바일 오더", systemImage: "popcorn") {
-                
+                OrderView()
             }
             
             Tab("마이 페이지", systemImage: "person") {
