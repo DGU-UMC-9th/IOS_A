@@ -6,58 +6,86 @@
 //
 
 import SwiftUI
+import PhotosUI
 
 struct UserInfoView: View {
     @AppStorage("userName") private var userName: String = "사용자"
+    
+    @State private var selectedItems: [PhotosPickerItem] = []
+    @State private var image: UIImage?
+    @State private var isPickerPresented: Bool = false
     
     var body: some View {
         NavigationStack {
             VStack(spacing: 33) {
                 userInfo
                 status
-                buttomImages
+                bottomImages
                 Spacer()
             }
             .padding()
+            .photosPicker(isPresented: $isPickerPresented, selection: $selectedItems, maxSelectionCount: 1, matching: .images)
+            .onChange(of: selectedItems) { _, newItems in
+                loadSelectedImage(from: newItems)
+            }
         }
     }
     
     var userInfo: some View {
         VStack {
-            HStack {
-                Text("\(userName)님")
-                    .font(.bold24)
-                Text("WELCOME")
-                    .font(.medium14)
-                    .foregroundStyle(.white)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(
-                        RoundedRectangle(cornerRadius: 6)
-                            .foregroundStyle(Color(red: 0.28, green: 0.8, blue: 0.82))
-                    )
-                Spacer()
-                NavigationLink {
-                    UserManageView()
-                } label: {
-                    Text("회원정보")
-                        .font(.medium14)
-                        .foregroundStyle(.white)
-                        .padding(.horizontal, 6)
-                        .padding(4)
-                        .background(
-                            Capsule()
-                                .foregroundStyle(Color(red: 0.28, green: 0.28, blue: 0.28))
-                        )
+            HStack(spacing: 12) {
+                Group {
+                    if let image = image {
+                        Image(uiImage: image)
+                            .resizable()
+                    } else {
+                        Image(systemName: "person.crop.circle")
+                            .resizable()
+                            .tint(.black)
+                    }
                 }
-            }
-            HStack(spacing: 9) {
-                Text("멤버십 포인트")
-                    .font(.semiBold14)
-                    .foregroundStyle(.gray04)
-                Text("500P")
-                    .font(.medium14)
-                Spacer()
+                .frame(width: 60, height: 60)
+                .clipShape(Circle())
+                .onLongPressGesture(minimumDuration: 1) {
+                    isPickerPresented = true
+                }
+                VStack {
+                    HStack {
+                        Text("\(userName)님")
+                            .font(.bold24)
+                        Text("WELCOME")
+                            .font(.medium14)
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(
+                                RoundedRectangle(cornerRadius: 6)
+                                    .foregroundStyle(Color(red: 0.28, green: 0.8, blue: 0.82))
+                            )
+                        Spacer()
+                        NavigationLink {
+                            UserManageView()
+                        } label: {
+                            Text("회원정보")
+                                .font(.medium14)
+                                .foregroundStyle(.white)
+                                .padding(.horizontal, 6)
+                                .padding(4)
+                                .background(
+                                    Capsule()
+                                        .foregroundStyle(Color(red: 0.28, green: 0.28, blue: 0.28))
+                                )
+                        }
+                    }
+                    HStack(spacing: 9) {
+                        Text("멤버십 포인트")
+                            .font(.semiBold14)
+                            .foregroundStyle(.gray04)
+                        Text("500P")
+                            .font(.medium14)
+                        Spacer()
+                    }
+                }
             }
             
             NavigationLink {
@@ -74,13 +102,13 @@ struct UserInfoView: View {
                 .padding()
                 .background(
                     LinearGradient(
-                    stops: [
-                    Gradient.Stop(color: Color(red: 0.67, green: 0.55, blue: 1), location: 0.00),
-                    Gradient.Stop(color: Color(red: 0.56, green: 0.68, blue: 0.95), location: 0.53),
-                    Gradient.Stop(color: Color(red: 0.36, green: 0.8, blue: 0.93), location: 1.00),
-                    ],
-                    startPoint: UnitPoint(x: 0, y: 0.5),
-                    endPoint: UnitPoint(x: 1, y: 0.5)
+                        stops: [
+                            Gradient.Stop(color: Color(red: 0.67, green: 0.55, blue: 1), location: 0.00),
+                            Gradient.Stop(color: Color(red: 0.56, green: 0.68, blue: 0.95), location: 0.53),
+                            Gradient.Stop(color: Color(red: 0.36, green: 0.8, blue: 0.93), location: 1.00),
+                        ],
+                        startPoint: UnitPoint(x: 0, y: 0.5),
+                        endPoint: UnitPoint(x: 1, y: 0.5)
                     )
                     .clipShape(RoundedRectangle(cornerRadius: 8))
                 )
@@ -129,7 +157,7 @@ struct UserInfoView: View {
         )
     }
     
-    var buttomImages: some View {
+    var bottomImages: some View {
         HStack(spacing: 28) {
             ForEach(BookingType.allCases, id: \.self) { bookingType in
                 NavigationLink {
@@ -142,6 +170,19 @@ struct UserInfoView: View {
                     }
                 }
                 .foregroundStyle(.black)
+            }
+        }
+    }
+    
+    private func loadSelectedImage(from items: [PhotosPickerItem]) {
+        guard let item = items.first else { return }
+        
+        Task {
+            if let data = try? await item.loadTransferable(type: Data.self),
+               let loadedImage = UIImage(data: data) {
+                await MainActor.run {
+                    self.image = loadedImage
+                }
             }
         }
     }
