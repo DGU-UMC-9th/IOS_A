@@ -15,12 +15,12 @@
 	</array>
 	<key>KAKAO_APP_KEY</key>
 	<string>$(KAKAO_APP_KEY)</string>
+	<key>TMDB_API_KEY</key>
+	<string>$(TMDB_API_KEY)</string>
 	<key>TMDB_BASE_URL</key>
 	<string>$(TMDB_BASE_URL)</string>
 	<key>TMDB_TOKEN</key>
 	<string>$(TMDB_TOKEN)</string>
-	<key>TMDB_API_KEY</key>
-	<string>$(TMDB_API_KEY)</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Pretendard-Bold.otf</string>
