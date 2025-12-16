@@ -11,6 +11,9 @@ struct UserInfoView: View {
     @AppStorage("username") private var username: String = "사용자"
     @EnvironmentObject var model: LoginViewModel
     
+    @State private var profileImage: UIImage?
+    @State private var showImagePicker = false
+    
     var body: some View {
         VStack{
             headerSection
@@ -20,49 +23,77 @@ struct UserInfoView: View {
             Spacer()
         }
         .navigationBarBackButtonHidden(true)
+        .sheet(isPresented: $showImagePicker) {
+                ImagePicker(image: $profileImage)
+            }
     }
     
     
     private var headerSection: some View {
-        VStack{
-            HStack{
-                Text("\(username)님")
-                    .font(.bold24)
-                Text("WELCOME")
-                    .font(.medium14)
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(
-                            RoundedRectangle(cornerRadius: 6)
-                                .fill(Color.mint01)
-                        )
-                Spacer()
-                NavigationLink {
-                    UserInfoManageView()
-                        .environmentObject(model)
-                    } label: {
-                    Text("회원정보")
-                        .font(.semiBold14)
+        HStack{
+            Group {
+                    if let image = profileImage {
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFill()
+                    } else {
+                        Image(systemName: "person.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .padding(15)
+                            .foregroundColor(.gray)
+                    }
+                }
+                .frame(width: 56, height: 56)
+                .background(Color.gray.opacity(0.2))
+                .clipShape(Circle())
+                .gesture(
+                    LongPressGesture(minimumDuration: 1.0)
+                        .onEnded { _ in
+                            showImagePicker = true
+                        }
+                )
+            
+            VStack{
+                HStack{
+                    Text("\(username)님")
+                        .font(.bold24)
+                    Text("WELCOME")
+                        .font(.medium14)
                         .foregroundColor(.white)
-                        .padding(.all, 4)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
                         .background(
-                            RoundedRectangle(cornerRadius: 4)
-                                .frame(width:72, height: 28)
-                                .foregroundStyle(Color.gray07)
-                                .cornerRadius(16)
-                    )}
-                    .padding(.all, 4)
-            }
-            HStack{
-                Text("멤버십 포인트")
-                    .font(.semiBold14)
-                    .foregroundColor(.gray04)
-                    .padding(.trailing, 9)
-                Text("500P")
-                    .font(.medium14)
-                    .foregroundColor(.black)
-                Spacer()
+                                RoundedRectangle(cornerRadius: 6)
+                                    .fill(Color.mint01)
+                            )
+                    Spacer()
+                    NavigationLink {
+                        UserInfoManageView()
+                            .environmentObject(model)
+                        } label: {
+                        Text("회원정보")
+                            .font(.semiBold14)
+                            .foregroundColor(.white)
+                            .padding(.all, 4)
+                            .background(
+                                RoundedRectangle(cornerRadius: 4)
+                                    .frame(width:72, height: 28)
+                                    .foregroundStyle(Color.gray07)
+                                    .cornerRadius(16)
+                        )}
+                        .padding(.all, 4)
+                }
+                HStack{
+                    Text("멤버십 포인트")
+                        .font(.semiBold14)
+                        .foregroundColor(.gray04)
+                        .padding(.trailing, 9)
+                    Text("500P")
+                        .font(.medium14)
+                        .foregroundColor(.black)
+                    Spacer()
+                }
             }
         }
         .padding(.horizontal, 16)
