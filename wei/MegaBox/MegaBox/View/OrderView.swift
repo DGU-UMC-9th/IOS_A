@@ -67,7 +67,7 @@ struct OrderView: View {
                 
                 print("극장 변경 버튼 탭")
             }
-        .PurpleTheaterBarStyle()
+        //.PurpleTheaterBarStyle()
     }
     
     // 선택 카드 영역
