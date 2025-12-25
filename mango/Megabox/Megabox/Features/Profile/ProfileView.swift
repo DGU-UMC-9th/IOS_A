@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct ProfileView: View {
+    @State private var showImagePicker = false
+    @State private var selectedImage: UIImage = UIImage(systemName: "person.circle.fill")!
     
     var body: some View {
         VStack(spacing:33){
@@ -23,21 +25,46 @@ struct ProfileView: View {
         }
         .frame(width: 380)
         .offset(y: -150) // 실제 레이아웃에는 그대로 두고 보이는 위치만 이동
+        .sheet(isPresented: $showImagePicker){
+            ImagePicker(image: $selectedImage)
+        }
     }
     
     private var profileHeader: some View {
         @AppStorage("userName") var userName = ""
         
-        return VStack(){
+        return VStack{
             HStack{
-                Text("\(userName)님")
-                    .font(.pretend(type: .bold, size: 24))
-                Text("WELCOME")
-                    .foregroundStyle(Color.white)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(Color(red: 0.28,green:0.8,blue:0.82))
-                    .cornerRadius(6)
+                Button(action:{
+                    showImagePicker = true
+                }){
+                    Image(uiImage: selectedImage)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 50, height: 50)
+                        .clipShape(Circle())
+                        .foregroundStyle(Color.gray)
+                }
+                
+                VStack(alignment:.leading){
+                    HStack{
+                        Text("\(userName)님")
+                            .font(.pretend(type: .bold, size: 24))
+                        Text("WELCOME")
+                            .foregroundStyle(Color.white)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(Color(red: 0.28,green:0.8,blue:0.82))
+                            .cornerRadius(6)
+                    }
+                    HStack{
+                        Text("멤버십 포인트")
+                            .foregroundStyle(Color.gray04)
+                            .font(.pretend(type: .semibold, size: 14))
+                        Text("500P")
+                            .font(.pretend(type: .medium, size: 14))
+                    }
+                }
                 
                 Spacer()
                 
@@ -50,14 +77,6 @@ struct ProfileView: View {
                 .background(Color.gray07)
                 .cornerRadius(16)
                 .frame(width: 72)
-            }
-            HStack{
-                Text("멤버십 포인트")
-                    .foregroundStyle(Color.gray04)
-                    .font(.pretend(type: .semibold, size: 14))
-                Text("500P")
-                    .font(.pretend(type: .medium, size: 14))
-                Spacer()
             }
         }
         .frame(maxWidth: .infinity)
